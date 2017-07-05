@@ -8,27 +8,11 @@ class API extends REST
 
     public $data = "";
 
-    //const DB_SERVER = "127.0.0.1";
-    //const DB_USER = "root";
-    //const DB_PASSWORD = "";
-    //const DB = "angularcode_customer";
-
-    private $db = NULL;
-    private $mysqli = NULL;
-
     public function __construct()
     {
         parent::__construct();                // Init parent contructor
-        //$this->dbConnect();					// Initiate Database connection
     }
 
-    /*
-     *  Connect to Database
-    *
-    private function dbConnect(){
-        $this->mysqli = new mysqli(DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME);
-    }
-*/
     /*
      * Dynmically call the method based on the query string
      */
@@ -43,13 +27,8 @@ class API extends REST
 
     private function prueba()
     {
-        /*  $js = array(
-              'prueba' => 'probando',
-              'anda?' => true
-          );
-          $this->response($this->json($js), 200);*/
         $payload = $this->getPayload();
-        print_r(($payload));
+        $this->response($this->json($payload), 200);
     }
 
     /* EJEMPLOS
@@ -172,7 +151,6 @@ class API extends REST
                 $_SESSION['persona'] = $result['legajo'];
                 $this->response($this->json($result), 200);
             }
-
             else
                 $this->response('', 204);    // If no records "No Content" status
         }
@@ -188,18 +166,11 @@ class API extends REST
         $usuario = json_decode(file_get_contents("php://input"),true);
         $column_names = array('legajo', 'nombre', 'apellido', 'email', 'idRol', 'contrasena');
         $keys = array_keys($usuario);
-        $columns = '';
-        $values = '';
         foreach($column_names as $desired_key){
             if(!in_array($desired_key, $keys)) {
-                $$desired_key = '';
-            }else{
-                $$desired_key = $usuario[$desired_key];
+                $this->response('Faltan datos o el formato no es correcto',406);
             }
-            $columns = $columns.$desired_key.',';
-            $values = $values."'".$$desired_key."',";
         }
-
         if(!empty($usuario)){
             if($r = $mysql->insert_usuario($usuario)){
                 $success = array('status' => "Success", "msg" => "Usuario registrado con éxito.", "data" => $usuario);
@@ -207,6 +178,64 @@ class API extends REST
             }
         }else
             $this->response('',204);
+    }
+    private function usuario(){
+        if($this->get_request_method() != "GET"){
+            $this->response('',406);
+        }
+
+        $mysql = new Mysql();
+
+        $legajo = $this->_request['legajo'];
+        if (!empty($legajo) and !empty($result = $mysql->obtener_usuario($legajo)))
+        {
+            $this->response($this->json($result), 200);
+        }
+        else
+        {
+            $this->response('No existe el usuario', 204);
+        }
+    }
+    private function actualizar(){
+        if($this->get_request_method() != "POST"){
+            $this->response('',406);
+        }
+        $mysql = new Mysql();
+
+        $usuario = json_decode(file_get_contents("php://input"),true);
+        $column_names = array('legajo', 'nombre', 'apellido', 'email', 'idRol', 'contrasena');
+        $keys = array_keys($usuario);
+        foreach($column_names as $desired_key){
+            if(!in_array($desired_key, $keys)) {
+                $this->response('Faltan datos o el formato no es correcto',406);
+            }
+        }
+        if(!empty($usuario)){
+            if($r = $mysql->update_usuario($usuario)){
+                unset($usuario['contrasena']);
+                $success = array('status' => "Success", "msg" => "Usuario actualizado con éxito.", "data" => $usuario);
+                $this->response($this->json($success),200);
+            }
+        }else
+            $this->response('',204);
+    }
+    private function eliminar(){
+        if($this->get_request_method() != "DELETE"){
+            $this->response('',406);
+        }
+
+        $mysql = new Mysql();
+
+        $legajo = $this->_request['legajo'];
+        if (!empty($legajo) and $result = $mysql->borrar_usuario($legajo))
+        {
+            $success = array('status' => "Success", "msg" => "Usuario eliminado con éxito.", "data" => $legajo);
+            $this->response($this->json($success),200);
+        }
+        else
+        {
+            $this->response('No existe el usuario', 204);
+        }
     }
 
     private function getPayload()
