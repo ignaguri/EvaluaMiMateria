@@ -25,7 +25,7 @@ class API extends REST
         if ((int)method_exists($this, $func) > 0)
             $this->$func();
         else
-            $this->response('', 404); // If the method not exist with in this class "Page not found".
+            $this->response('', 404); // If the method not exist within this class "Page not found".
     }
 
     /**
