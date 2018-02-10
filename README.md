@@ -1,5 +1,5 @@
 # AppEncuestadoraCreatividad
-Versión en VueJS (no desarrollado aun) de la app
+Versión en VueJS de la app
 
 # Requisitos
 

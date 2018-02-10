@@ -1270,6 +1270,15 @@ class PHP_CRUD_API {
 		}
 	}
 
+	protected function exitWith400($type) {
+		if (isset($_SERVER['REQUEST_METHOD'])) {
+			header('Content-Type:',true,400);
+			die("The request could not be understood by the server due to malformed syntax. The client SHOULD NOT repeat the request without modifications. ($type)");
+		} else {
+			throw new \Exception("Bad request ($type)");
+		}
+	}
+
 	protected function exitWith422($object) {
 		if (isset($_SERVER['REQUEST_METHOD'])) {
 			header('Content-Type:',true,422);
@@ -1679,10 +1688,16 @@ class PHP_CRUD_API {
 	}
 
 	protected function retrieveInputs($data) {
+		$data = trim($data, " \t\n\r");
 		if (strlen($data)==0) {
 			$input = false;
 		} else if ($data[0]=='{' || $data[0]=='[') {
 			$input = json_decode($data);
+			$causeCode = json_last_error();
+			if ($causeCode !== JSON_ERROR_NONE) {
+				$errorString = "Error decoding input JSON. json_last_error code: " . $causeCode;
+				$this->exitWith400($errorString);
+			}
 		} else {
 			parse_str($data, $input);
 			foreach ($input as $key => $value) {
@@ -2699,12 +2714,12 @@ class PHP_CRUD_API {
 // uncomment the lines below when running in stand-alone mode:
 
  $api = new PHP_CRUD_API(array(
- 	'dbengine'=>'MySQL',
- 	'hostname'=>'localhost',
- 	'username'=>'root',
- 	'password'=>'root',
- 	'database'=>'appencuestadora',
- 	'charset'=>'utf8'
+     'dbengine'=>'MySQL',
+     'hostname'=>'localhost',
+     'username'=>'root',
+     'password'=>'root',
+     'database'=>'appencuestadora',
+     'charset'=>'utf8'
  ));
  $api->executeCommand();
 

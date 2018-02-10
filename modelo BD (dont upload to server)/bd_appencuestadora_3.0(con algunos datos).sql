@@ -1,5 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS `appencuestadora` /*!40100 DEFAULT CHARACTER SET utf8 */;
-USE `appencuestadora`;
 -- MySQL dump 10.13  Distrib 5.6.17, for Win32 (x86)
 --
 -- Host: localhost    Database: appencuestadora
@@ -39,6 +37,15 @@ CREATE TABLE `criteriosxencuesta` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `criteriosxencuesta`
+--
+
+LOCK TABLES `criteriosxencuesta` WRITE;
+/*!40000 ALTER TABLE `criteriosxencuesta` DISABLE KEYS */;
+/*!40000 ALTER TABLE `criteriosxencuesta` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `curso`
 --
 
@@ -52,6 +59,15 @@ CREATE TABLE `curso` (
   PRIMARY KEY (`idCurso`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `curso`
+--
+
+LOCK TABLES `curso` WRITE;
+/*!40000 ALTER TABLE `curso` DISABLE KEYS */;
+/*!40000 ALTER TABLE `curso` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `encuestas`
@@ -84,6 +100,15 @@ CREATE TABLE `encuestas` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `encuestas`
+--
+
+LOCK TABLES `encuestas` WRITE;
+/*!40000 ALTER TABLE `encuestas` DISABLE KEYS */;
+/*!40000 ALTER TABLE `encuestas` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `etapas`
 --
 
@@ -98,6 +123,15 @@ CREATE TABLE `etapas` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `etapas`
+--
+
+LOCK TABLES `etapas` WRITE;
+/*!40000 ALTER TABLE `etapas` DISABLE KEYS */;
+/*!40000 ALTER TABLE `etapas` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `materias`
 --
 
@@ -108,8 +142,18 @@ CREATE TABLE `materias` (
   `idMaterias` int(11) NOT NULL AUTO_INCREMENT,
   `nombre` varchar(45) NOT NULL,
   PRIMARY KEY (`idMaterias`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `materias`
+--
+
+LOCK TABLES `materias` WRITE;
+/*!40000 ALTER TABLE `materias` DISABLE KEYS */;
+INSERT INTO `materias` VALUES (1,'Creatividad'),(2,'Big Data'),(3,'ARE'),(4,'DSI'),(5,'Inteligencia Aritficial'),(6,'Investigación Operativa'),(9,'Prueba'),(10,'Probando');
+/*!40000 ALTER TABLE `materias` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `respuestasxcriterio`
@@ -133,6 +177,15 @@ CREATE TABLE `respuestasxcriterio` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `respuestasxcriterio`
+--
+
+LOCK TABLES `respuestasxcriterio` WRITE;
+/*!40000 ALTER TABLE `respuestasxcriterio` DISABLE KEYS */;
+/*!40000 ALTER TABLE `respuestasxcriterio` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `roles`
 --
 
@@ -143,8 +196,18 @@ CREATE TABLE `roles` (
   `idRoles` int(11) NOT NULL AUTO_INCREMENT,
   `nombre` varchar(45) NOT NULL,
   PRIMARY KEY (`idRoles`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `roles`
+--
+
+LOCK TABLES `roles` WRITE;
+/*!40000 ALTER TABLE `roles` DISABLE KEYS */;
+INSERT INTO `roles` VALUES (1,'admin'),(2,'Alumno'),(3,'Profesor');
+/*!40000 ALTER TABLE `roles` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `usuarios`
@@ -159,14 +222,24 @@ CREATE TABLE `usuarios` (
   `apellido` varchar(45) NOT NULL,
   `nombre` varchar(45) NOT NULL,
   `mail` varchar(45) NOT NULL,
-  `contraseña` char(32) NOT NULL,
+  `password` char(32) NOT NULL,
   `idRol` int(11) NOT NULL,
   PRIMARY KEY (`idUsuarios`),
   UNIQUE KEY `legajo_UNIQUE` (`legajo`),
   KEY `fk_usuario_rol_idx` (`idRol`),
   CONSTRAINT `fk_usuario_rol` FOREIGN KEY (`idRol`) REFERENCES `roles` (`idRoles`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `usuarios`
+--
+
+LOCK TABLES `usuarios` WRITE;
+/*!40000 ALTER TABLE `usuarios` DISABLE KEYS */;
+INSERT INTO `usuarios` VALUES (1,0,'admin','admin','admin','admin',1),(2,1,'test','test','test','test',1);
+/*!40000 ALTER TABLE `usuarios` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `usuariosxencuesta`
@@ -186,6 +259,15 @@ CREATE TABLE `usuariosxencuesta` (
   CONSTRAINT `fk_userXEncuesta_usuario` FOREIGN KEY (`idUsuario`) REFERENCES `usuarios` (`idUsuarios`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `usuariosxencuesta`
+--
+
+LOCK TABLES `usuariosxencuesta` WRITE;
+/*!40000 ALTER TABLE `usuariosxencuesta` DISABLE KEYS */;
+/*!40000 ALTER TABLE `usuariosxencuesta` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `votosxcriterio`
@@ -208,6 +290,15 @@ CREATE TABLE `votosxcriterio` (
   CONSTRAINT `fk_votos_usuario` FOREIGN KEY (`idUsuarioVotante`) REFERENCES `usuarios` (`idUsuarios`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `votosxcriterio`
+--
+
+LOCK TABLES `votosxcriterio` WRITE;
+/*!40000 ALTER TABLE `votosxcriterio` DISABLE KEYS */;
+/*!40000 ALTER TABLE `votosxcriterio` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -218,4 +309,4 @@ CREATE TABLE `votosxcriterio` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-08-28 12:35:20
+-- Dump completed on 2018-02-09 21:19:58

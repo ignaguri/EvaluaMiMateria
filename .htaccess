@@ -4,3 +4,6 @@
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^(.*)$ api.php/$1 [L,QSA]
 </IfModule>
+<IfModule mod_headers.c>
+    Header set Access-Control-Allow-Origin "http://localhost:8080"
+</IfModule>

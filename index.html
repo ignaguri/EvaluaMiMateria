@@ -1,34 +1,18 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>App Encuestadora</title>
-    <script src="vue.js"></script>
-    <link rel="stylesheet" href="bootstrap.min.css">
-</head>
-<body>
-<div id="app">
-    <div class="row">
-        <div class="text-center">
-            <h1>App Encuestadora</h1>
-        </div>
-        <hr>
-    </div>
-    <div class="row">
-        <div class="col-md-4 col-md-offset-5">
-            <button type="button" class="btn btn-success" @click="cargar">Ver materias</button>
-            <ul>
-                <li v-for="m in materias">{{m}}</li>
-            </ul>
-        </div>
-    </div>
-    <div class="row">
-        <div class="text-center">
-            <label for="materia">Agregar materia:</label>
-            <input type="text" id="materia" v-model="materia">
-            <button type="button" class="btn btn-success" @click="insert">Add materia</button>
-        </div>
-    </div>
-</div>
-<script src="app.js"></script>
-</body>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="stylesheet" href="static/bootstrap.min.css">
+    <title>encuesta-vue-wp</title>
+  </head>
+  <body>
+  <div class="container-fluid">
+    <div id="app"></div>
+  </div>
+    <!-- built files will be auto injected -->
+    <script src="static/jquery-3.2.1.slim.min.js"></script>
+    <script src="static/popper.min.js"></script>
+    <script src="static/bootstrap.min.js"></script>
+  </body>
 </html>
