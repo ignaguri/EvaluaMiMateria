@@ -52,7 +52,17 @@
                 app.error = true
                 app.errorText = r[1]
               } else {
-                app.$router.push('materias')
+                switch (r[2]) {
+                  case 1:
+                    app.$router.push('admin')
+                    break
+                  case 2:
+                    app.$router.push('alumno/' + r[1])
+                    break
+                  case 3:
+                    app.$router.push('profesor/' + r[1])
+                    break
+                }
               }
             })
             /*          fetch('http://localhost/encuestaVueWebpack/api.php',

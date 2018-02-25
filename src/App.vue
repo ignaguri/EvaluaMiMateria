@@ -1,7 +1,11 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png" class="text-right">
-      <a @click.prevent="logout" href="">Salir</a>
+    <nav class="navbar navbar-light bg-light">
+        <img src="./assets/logo.png" class="d-inline-block align-top">
+        <a @click.prevent="logout" href="">Salir</a>
+    </nav>
+    <!--<img src="./assets/logo.png" class="text-right">-->
+      <!--<a @click.prevent="logout" href="">Salir</a>-->
     <router-view/>
   </div>
 </template>
