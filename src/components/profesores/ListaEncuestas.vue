@@ -1,6 +1,11 @@
 <template>
-    <div class="col-md-auto">
-        <tabla :title="titulo" :subTitle="subtitulo" :columns="columnas" :data="filas"></tabla>
+    <div>
+    <div class="col-md-auto" v-if="!encuesta">
+        <tabla :title="titulo" :subTitle="subtitulo" :columns="columnas" :data="filas" @selected="verEncuesta"></tabla>
+    </div>
+    <div class="col-md-auto" v-if="encuesta">
+        <encuesta :id="encuesta"></encuesta>
+    </div>
     </div>
 </template>
 <script>
@@ -10,9 +15,6 @@ import tabla from '../utils/Tabla.vue'
 import encuesta from './Encuesta.vue'
 
     export default {
-      props: [
-        'id'
-      ],
       components: {
         tabla,
         encuesta
@@ -24,27 +26,29 @@ import encuesta from './Encuesta.vue'
         return {
           titulo: 'Encuestas',
           subtitulo: 'Lista de las encuestas actualmente creadas',
-          columnas: ['IdEncuestas', 'Creador', 'Curso', 'Materia', 'EtapaActual', 'Nombre', 'FechaCreacion', 'FechaFinEtapaActual', 'CantMaxCriterios', 'CantMaxVotosPorPersona'],
-          filas: []
+          columnas: ['Id', 'Nombre', 'Curso', 'Materia', 'Creador', 'Etapa'],
+          filas: [],
+          encuesta: null
         }
       },
       methods: {
         cargarEncuestas () {
-          var aux = []
-          api.getEncuestas()
+          api.getEncuestasFull()
             .then(r => {
-              if (r.length > 0) {
-                r.records.forEach(function (m) {
-                  aux.push(m)
+              r.forEach(e => {
+                this.filas.push({
+                  id: e.idEncuestas,
+                  creador: e.creador,
+                  curso: e.curso,
+                  materia: e.materia,
+                  etapa: e.etapaActual,
+                  nombre: e.nombre
                 })
-              } else {
-                this.subtitulo = 'No se encontraron encuestas creadas'
-              }
+              })
             })
-          this.filas = aux
         },
         verEncuesta (id) {
-          console.log('ver Encuesta', id)
+          this.encuesta = id
         }
       }
     }

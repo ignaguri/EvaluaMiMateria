@@ -9,14 +9,14 @@
                         <label for="cmb_curso">Curso</label>
                         <select class="form-control" id="cmb_curso" v-model="curso" required>
                             <option :value="null">Seleccione un curso</option>
-                            <option v-for="c in cursos" :key="c.id">{{c.nombre}}({{c.turno}})</option>
+                            <option v-for="c in cursos" :key="c.id" :value="c.id">{{c.nombre}}({{c.turno}})</option>
                         </select>
                     </div>
                     <div class="form-group">
                         <label for="cmb_materia">Materia</label>
                         <select class="form-control" id="cmb_materia" v-model="materia" required>
                             <option :value="null">Seleccione una materia</option>
-                            <option v-for="m in materias" :key="m.id">{{m.nombre}}</option>
+                            <option v-for="m in materias" :key="m.id" :value="m.id">{{m.nombre}}</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -25,11 +25,11 @@
                     </div>
                     <div class="form-group">
                         <label for="txt_cant_criterios">Cantidad máxima de criterios</label>
-                        <input type="number" class="form-control" id="txt_cant_criterios" placeholder="Cant. máx de criterios" v-model="cantCriterios" required>
+                        <input type="number" class="form-control" id="txt_cant_criterios" placeholder="Cant. máx de criterios" v-model="cantCriterios" min="1" max="50" required>
                     </div>
                     <div class="form-group">
                         <label for="txt_cant_votos">Cantidad máxima de votos por persona</label>
-                        <input type="number" class="form-control" id="txt_cant_votos" placeholder="Cant. máx de votos p/persona" v-model="cantVotos" required>
+                        <input type="number" class="form-control" id="txt_cant_votos" placeholder="Cant. máx de votos p/persona" v-model="cantVotos" min="1" max="50" required>
                     </div>
                     <button type="submit" class="btn btn-success">Crear</button>
                 </form>
@@ -59,7 +59,21 @@ import api from '../../api'
       },
       methods: {
         enviar () {
-          console.log('enviar')
+          const encuesta = {
+            curso: this.curso,
+            materia: this.materia,
+            nombre: this.nombre,
+            cantMaxCriterios: Number(this.cantCriterios),
+            cantMaxVotosPorPersona: Number(this.cantVotos)
+          }
+          api.postEncuesta(encuesta)
+            .then(r => {
+              if (r) {
+                alert('Creada con éxito')
+              } else {
+                alert('Error al crear')
+              }
+            })
         },
         cargarMaterias () {
           var aux = []
