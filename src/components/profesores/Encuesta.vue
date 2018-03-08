@@ -12,9 +12,28 @@
             <p class="card-text">Cantidad máx. de criterios: <strong>{{cantMaxCriterios}}</strong></p>
             <p class="card-text">Cantidad máx. de votos por persona: <strong>{{cantMaxVotosPorPersona}}</strong></p>
             <p class="card-text">Fecha de creación: <strong>{{creacion}}</strong></p>
-            <a class="btn btn-outline-info" role="button" href="#" @click.prevent="cambiarEtapa">Cambiar de etapa</a>
+            <a class="btn btn-outline-info" role="button" href="#" @click.prevent="cambiarEtapa" data-toggle="modal" data-target="#myModal">Cambiar de etapa</a>
+            <a class="btn btn-outline-info" role="button" href="#" @click.prevent="estadisticas">Ver votaciones</a>
         </div>
     </div>
+        <div class="modal" tabindex="-1" role="dialog" id="myModal">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">{{modal.title}}</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" v-html="modal.body">
+                    </div>
+                    <div class="modal-footer">
+                        <!--<button type="button" class="btn btn-primary">Save changes</button>-->
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 <script>
@@ -35,7 +54,11 @@ import api from '../../api'
           creacion: null,
           finEtapa: null,
           cantMaxCriterios: null,
-          cantMaxVotosPorPersona: null
+          cantMaxVotosPorPersona: null,
+          modal: {
+            title: null,
+            body: null
+          }
         }
       },
       mounted () {
@@ -61,6 +84,17 @@ import api from '../../api'
           this.$parent.encuesta = null
         },
         cambiarEtapa () {
+          console.log('implementar')
+          this.modal.title = 'Cambiar de etapa'
+          let content = '<div class="row">' +
+            '<div class="col-md-12">' +
+            '<p>Etapa actual: ' + this.etapa +
+            '</p>' +
+            '</div>' +
+            '</div>'
+          this.modal.body = content
+        },
+        estadisticas () {
           console.log('implementar')
         }
       }
