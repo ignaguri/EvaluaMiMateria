@@ -25,7 +25,7 @@ import encuesta from './Encuesta.vue'
       data () {
         return {
           titulo: 'Encuestas',
-          subtitulo: 'Lista de las encuestas actualmente creadas',
+          subtitulo: 'Lista de las encuestas a la que estas suscrito',
           columnas: ['Id', 'Nombre', 'Curso', 'Materia', 'Creador', 'Etapa'],
           filas: [],
           encuesta: null
