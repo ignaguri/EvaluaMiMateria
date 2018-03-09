@@ -16,6 +16,8 @@
 </template>
 
 <script>
+import api from '../../api'
+
 export default {
   name: 'matriculacion',
   data () {
@@ -25,12 +27,16 @@ export default {
   },
   methods: {
     matricularse () {
-      console.log('matricularse a', this.codigo)
+      api.matricularse(this.codigo)
+        .then(r => {
+          if (r) {
+            alert('Matriculado correctamente')
+            this.$parent.current = 'listaEncuestas'
+          } else {
+            alert('Error al matricularse. Verifique que el código sea correcto')
+          }
+        })
     }
   }
 }
 </script>
-
-<style scoped>
-
-</style>

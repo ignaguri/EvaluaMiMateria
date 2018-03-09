@@ -10,10 +10,9 @@
 </template>
 <script>
 /* eslint-disable indent */
-import api from '../../api'
+    import api from '../../api'
 import tabla from '../utils/Tabla.vue'
 import encuesta from './Encuesta.vue'
-
     export default {
       components: {
         tabla,
@@ -25,7 +24,7 @@ import encuesta from './Encuesta.vue'
       data () {
         return {
           titulo: 'Encuestas',
-          subtitulo: 'Lista de las encuestas a la que estas suscrito',
+          subtitulo: 'Lista de las encuestas a la que estás matriculado',
           columnas: ['Id', 'Nombre', 'Curso', 'Materia', 'Creador', 'Etapa'],
           filas: [],
           encuesta: null
@@ -41,18 +40,22 @@ import encuesta from './Encuesta.vue'
       methods: {
         cargarEncuestas () {
           this.filas = []
-          api.getEncuestasFull()
+          api.getEncuestasMatriculado()
             .then(r => {
-              r.forEach(e => {
-                this.filas.push({
-                  id: e.idEncuestas,
-                  creador: e.creador,
-                  curso: e.curso,
-                  materia: e.materia,
-                  etapa: e.etapaActual,
-                  nombre: e.nombre
+              if (r.length > 0) {
+                r.forEach(e => {
+                  this.filas.push({
+                    id: e.idEncuestas,
+                    creador: e.creador,
+                    curso: e.curso,
+                    materia: e.materia,
+                    etapa: e.etapaActual,
+                    nombre: e.nombre
+                  })
                 })
-              })
+              } else {
+                this.subtitulo = 'Actualmente no estás matriculado a ninguna encuesta'
+              }
             })
         },
         verEncuesta (id) {

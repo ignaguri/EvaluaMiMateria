@@ -139,6 +139,21 @@ export default {
         return false
       })
   },
+  getEncuestaPorCodigo (codigo) {
+    if (!this.checkLogin()) return Promise.reject(new Error('Not logged in'))
+    return axios.get(URL + 'encuestas' + '?filter=codigo,eq,' + codigo + '&transform=1')
+      .then(function (response) {
+        if (response.data.encuestas.length > 0) {
+          return response.data.encuestas[0]
+        } else {
+          return false
+        }
+      })
+      .catch(function (error) {
+        console.log(error)
+        return false
+      })
+  },
   getEncuestasFull () {
     if (!this.checkLogin()) return Promise.reject(new Error('Not logged in'))
     // TODO: mejorar, usando la sintaxis de abajo para ahorrarse el populate
@@ -155,6 +170,26 @@ export default {
         let promesas = []
         data.forEach(encuesta => {
           promesas.push(this.populateEncuesta(encuesta))
+        })
+        return Promise.all(promesas)
+      })
+      .then(fin => {
+        return fin
+      })
+      .catch(function (error) {
+        console.log(error)
+        return false
+      })
+  },
+  getEncuestasMatriculado () {
+    if (!this.checkLogin()) return Promise.reject(new Error('Not logged in'))
+    let alumno = this.checkLogin()
+    return axios.get(URL + 'usuariosxencuesta' + '?filter=idUsuario,eq,' + alumno + '&transform=1')
+      .then(matriculadas => {
+        let encuestas = matriculadas.data.usuariosxencuesta
+        let promesas = []
+        encuestas.forEach(encuesta => {
+          promesas.push(this.getEncuestaFull(encuesta.idEncuesta))
         })
         return Promise.all(promesas)
       })
@@ -302,6 +337,25 @@ export default {
       .catch(function (error) {
         console.log(error)
         return false
+      })
+  },
+  matricularse (codigo) {
+    if (!this.checkLogin()) return Promise.reject(new Error('Not logged in'))
+    let alumno = this.checkLogin()
+    return this.getEncuestaPorCodigo(codigo)
+      .then(found => {
+        if (found) {
+          return axios.post(URL + 'usuariosxencuesta', {idEncuesta: found.idEncuestas, idUsuario: alumno})
+            .then(r => {
+              return true
+            })
+            .catch(function (error) {
+              console.log(error)
+              return false
+            })
+        } else {
+          return false
+        }
       })
   }
 }
