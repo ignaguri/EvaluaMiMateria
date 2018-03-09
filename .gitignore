@@ -13,3 +13,8 @@ yarn-error.log*
 *.njsproj
 *.sln
 
+<<<<<<< HEAD
+=======
+api.php
+/config/dev.env.js
+>>>>>>> 6589c2abcf90b86075aa48f9b3898c9f66e228e3
