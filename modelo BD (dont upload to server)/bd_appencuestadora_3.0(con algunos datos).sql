@@ -1,312 +1,410 @@
--- MySQL dump 10.13  Distrib 5.6.17, for Win32 (x86)
+-- phpMyAdmin SQL Dump
+-- version 4.7.8
+-- https://www.phpmyadmin.net/
 --
--- Host: localhost    Database: appencuestadora
--- ------------------------------------------------------
--- Server version	5.6.23-log
+-- Host: localhost
+-- Generation Time: Mar 09, 2018 at 06:00 PM
+-- Server version: 5.7.21
+-- PHP Version: 7.1.7
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
+START TRANSACTION;
+SET time_zone = "+00:00";
+
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
-/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
-/*!40103 SET TIME_ZONE='+00:00' */;
-/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Database: `appencuestadora`
+--
+
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `criteriosxencuesta`
 --
 
-DROP TABLE IF EXISTS `criteriosxencuesta`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `criteriosxencuesta` (
-  `idCriteriosXEncuesta` int(11) NOT NULL AUTO_INCREMENT,
+  `idCriteriosXEncuesta` int(11) NOT NULL,
   `idEncuesta` int(11) NOT NULL,
   `pregunta` tinytext NOT NULL,
   `propuestoPor` int(11) DEFAULT NULL,
-  `esDefinitivo` tinyint(1) DEFAULT NULL,
-  PRIMARY KEY (`idCriteriosXEncuesta`),
-  KEY `fk_criterios_encuesta_idx` (`idEncuesta`),
-  KEY `fk_criterios_propuestopor_idx` (`propuestoPor`),
-  CONSTRAINT `fk_criterios_encuesta` FOREIGN KEY (`idEncuesta`) REFERENCES `encuestas` (`idEncuestas`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_criterios_propuestopor` FOREIGN KEY (`propuestoPor`) REFERENCES `usuarios` (`idUsuarios`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  `esDefinitivo` tinyint(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Dumping data for table `criteriosxencuesta`
---
-
-LOCK TABLES `criteriosxencuesta` WRITE;
-/*!40000 ALTER TABLE `criteriosxencuesta` DISABLE KEYS */;
-/*!40000 ALTER TABLE `criteriosxencuesta` ENABLE KEYS */;
-UNLOCK TABLES;
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `curso`
 --
 
-DROP TABLE IF EXISTS `curso`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `curso` (
-  `idCurso` int(11) NOT NULL AUTO_INCREMENT,
+  `idCurso` int(11) NOT NULL,
   `nombre` varchar(45) NOT NULL,
-  `turno` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`idCurso`)
+  `turno` varchar(45) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `curso`
 --
 
-LOCK TABLES `curso` WRITE;
-/*!40000 ALTER TABLE `curso` DISABLE KEYS */;
-/*!40000 ALTER TABLE `curso` ENABLE KEYS */;
-UNLOCK TABLES;
+INSERT INTO `curso` (`idCurso`, `nombre`, `turno`) VALUES
+(1, '5K1', 'Mañana'),
+(2, '5K8', 'Tarde');
+
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `encuestas`
 --
 
-DROP TABLE IF EXISTS `encuestas`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `encuestas` (
-  `idEncuestas` int(11) NOT NULL AUTO_INCREMENT,
+  `idEncuestas` int(11) NOT NULL,
   `creador` int(11) NOT NULL,
   `curso` int(11) DEFAULT NULL,
   `materia` int(11) NOT NULL,
   `etapaActual` int(11) NOT NULL,
   `nombre` varchar(45) NOT NULL,
   `fechaCreacion` date NOT NULL,
-  `fechaFinEtapaActual` date NOT NULL,
+  `fechaFinEtapaActual` date DEFAULT NULL,
   `cantMaxCriterios` int(11) DEFAULT NULL,
   `cantMaxVotosPorPersona` int(11) DEFAULT NULL,
-  PRIMARY KEY (`idEncuestas`),
-  KEY `fk_encuesta_creador_idx` (`creador`),
-  KEY `fk_encuesta_curso_idx` (`curso`),
-  KEY `fk_encuesta_materia_idx` (`materia`),
-  KEY `fk_encuesta_etapa_idx` (`etapaActual`),
-  CONSTRAINT `fk_encuesta_creador` FOREIGN KEY (`creador`) REFERENCES `usuarios` (`idUsuarios`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_encuesta_curso` FOREIGN KEY (`curso`) REFERENCES `curso` (`idCurso`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_encuesta_etapa` FOREIGN KEY (`etapaActual`) REFERENCES `etapas` (`idEtapas`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_encuesta_materia` FOREIGN KEY (`materia`) REFERENCES `materias` (`idMaterias`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  `codigo` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `encuestas`
 --
 
-LOCK TABLES `encuestas` WRITE;
-/*!40000 ALTER TABLE `encuestas` DISABLE KEYS */;
-/*!40000 ALTER TABLE `encuestas` ENABLE KEYS */;
-UNLOCK TABLES;
+INSERT INTO `encuestas` (`idEncuestas`, `creador`, `curso`, `materia`, `etapaActual`, `nombre`, `fechaCreacion`, `fechaFinEtapaActual`, `cantMaxCriterios`, `cantMaxVotosPorPersona`, `codigo`) VALUES
+(1, 3, 2, 3, 2, 'Probando', '2018-03-03', '2018-03-15', 12, 2, 'Probando5k3'),
+(2, 3, 1, 6, 1, 'Otra más', '2018-03-03', '2018-03-16', 23, 21, 'OtraMasChicos');
+
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `etapas`
 --
 
-DROP TABLE IF EXISTS `etapas`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `etapas` (
-  `idEtapas` int(11) NOT NULL AUTO_INCREMENT,
-  `nombre` varchar(45) NOT NULL,
-  PRIMARY KEY (`idEtapas`)
+  `idEtapas` int(11) NOT NULL,
+  `nombre` varchar(45) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `etapas`
 --
 
-LOCK TABLES `etapas` WRITE;
-/*!40000 ALTER TABLE `etapas` DISABLE KEYS */;
-/*!40000 ALTER TABLE `etapas` ENABLE KEYS */;
-UNLOCK TABLES;
+INSERT INTO `etapas` (`idEtapas`, `nombre`) VALUES
+(1, 'Creada'),
+(2, 'Votacion Criterios'),
+(3, 'Priorizacion'),
+(4, 'Habilitada'),
+(5, 'Cerrada');
+
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `materias`
 --
 
-DROP TABLE IF EXISTS `materias`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `materias` (
-  `idMaterias` int(11) NOT NULL AUTO_INCREMENT,
-  `nombre` varchar(45) NOT NULL,
-  PRIMARY KEY (`idMaterias`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  `idMaterias` int(11) NOT NULL,
+  `nombre` varchar(45) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `materias`
 --
 
-LOCK TABLES `materias` WRITE;
-/*!40000 ALTER TABLE `materias` DISABLE KEYS */;
-INSERT INTO `materias` VALUES (1,'Creatividad'),(2,'Big Data'),(3,'ARE'),(4,'DSI'),(5,'Inteligencia Aritficial'),(6,'Investigación Operativa'),(9,'Prueba'),(10,'Probando');
-/*!40000 ALTER TABLE `materias` ENABLE KEYS */;
-UNLOCK TABLES;
+INSERT INTO `materias` (`idMaterias`, `nombre`) VALUES
+(1, 'Creatividad'),
+(2, 'Big Data'),
+(3, 'ARE'),
+(4, 'DSI'),
+(5, 'Inteligencia Aritficial'),
+(6, 'Investigación Operativa');
+
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `respuestasxcriterio`
 --
 
-DROP TABLE IF EXISTS `respuestasxcriterio`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `respuestasxcriterio` (
-  `idRespuestasXCriterio` int(11) NOT NULL AUTO_INCREMENT,
+  `idRespuestasXCriterio` int(11) NOT NULL,
   `idCriterioXEncuesta` int(11) NOT NULL,
   `idUsuario` int(11) NOT NULL,
   `fecha` date NOT NULL,
-  `respuesta` int(11) NOT NULL,
-  PRIMARY KEY (`idRespuestasXCriterio`),
-  KEY `fk_respuestas_criterio_idx` (`idCriterioXEncuesta`),
-  KEY `fk_respuestas_usuario_idx` (`idUsuario`),
-  CONSTRAINT `fk_respuestas_criterio` FOREIGN KEY (`idCriterioXEncuesta`) REFERENCES `criteriosxencuesta` (`idCriteriosXEncuesta`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_respuestas_usuario` FOREIGN KEY (`idUsuario`) REFERENCES `usuarios` (`idUsuarios`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  `respuesta` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Dumping data for table `respuestasxcriterio`
---
-
-LOCK TABLES `respuestasxcriterio` WRITE;
-/*!40000 ALTER TABLE `respuestasxcriterio` DISABLE KEYS */;
-/*!40000 ALTER TABLE `respuestasxcriterio` ENABLE KEYS */;
-UNLOCK TABLES;
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `roles`
 --
 
-DROP TABLE IF EXISTS `roles`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `roles` (
-  `idRoles` int(11) NOT NULL AUTO_INCREMENT,
-  `nombre` varchar(45) NOT NULL,
-  PRIMARY KEY (`idRoles`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  `idRoles` int(11) NOT NULL,
+  `nombre` varchar(45) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `roles`
 --
 
-LOCK TABLES `roles` WRITE;
-/*!40000 ALTER TABLE `roles` DISABLE KEYS */;
-INSERT INTO `roles` VALUES (1,'admin'),(2,'Alumno'),(3,'Profesor');
-/*!40000 ALTER TABLE `roles` ENABLE KEYS */;
-UNLOCK TABLES;
+INSERT INTO `roles` (`idRoles`, `nombre`) VALUES
+(1, 'admin'),
+(2, 'Alumno'),
+(3, 'Profesor');
+
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `usuarios`
 --
 
-DROP TABLE IF EXISTS `usuarios`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `usuarios` (
-  `idUsuarios` int(11) NOT NULL AUTO_INCREMENT,
+  `idUsuarios` int(11) NOT NULL,
   `legajo` int(11) NOT NULL,
   `apellido` varchar(45) NOT NULL,
   `nombre` varchar(45) NOT NULL,
   `mail` varchar(45) NOT NULL,
   `password` char(32) NOT NULL,
-  `idRol` int(11) NOT NULL,
-  PRIMARY KEY (`idUsuarios`),
-  UNIQUE KEY `legajo_UNIQUE` (`legajo`),
-  KEY `fk_usuario_rol_idx` (`idRol`),
-  CONSTRAINT `fk_usuario_rol` FOREIGN KEY (`idRol`) REFERENCES `roles` (`idRoles`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  `idRol` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `usuarios`
 --
 
-LOCK TABLES `usuarios` WRITE;
-/*!40000 ALTER TABLE `usuarios` DISABLE KEYS */;
-INSERT INTO `usuarios` VALUES (1,0,'admin','admin','admin','admin',1),(2,1,'test','test','test','test',1);
-/*!40000 ALTER TABLE `usuarios` ENABLE KEYS */;
-UNLOCK TABLES;
+INSERT INTO `usuarios` (`idUsuarios`, `legajo`, `apellido`, `nombre`, `mail`, `password`, `idRol`) VALUES
+(1, 0, 'admin', 'admin', 'admin', 'admin', 1),
+(2, 1, 'Alumno', 'El', 'alumno', 'admin', 2),
+(3, 2, 'Profe', 'Mr.', 'profe', 'admin', 3);
+
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `usuariosxencuesta`
 --
 
-DROP TABLE IF EXISTS `usuariosxencuesta`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `usuariosxencuesta` (
-  `idUsuariosXEncuesta` int(11) NOT NULL AUTO_INCREMENT,
+  `idUsuariosXEncuesta` int(11) NOT NULL,
   `idEncuesta` int(11) NOT NULL,
-  `idUsuario` int(11) NOT NULL,
-  PRIMARY KEY (`idUsuariosXEncuesta`),
-  KEY `fk_userXEncuesta_encuesta_idx` (`idEncuesta`),
-  KEY `fk_userXEncuesta_usuario_idx` (`idUsuario`),
-  CONSTRAINT `fk_userXEncuesta_encuesta` FOREIGN KEY (`idEncuesta`) REFERENCES `encuestas` (`idEncuestas`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_userXEncuesta_usuario` FOREIGN KEY (`idUsuario`) REFERENCES `usuarios` (`idUsuarios`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  `idUsuario` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Dumping data for table `usuariosxencuesta`
---
-
-LOCK TABLES `usuariosxencuesta` WRITE;
-/*!40000 ALTER TABLE `usuariosxencuesta` DISABLE KEYS */;
-/*!40000 ALTER TABLE `usuariosxencuesta` ENABLE KEYS */;
-UNLOCK TABLES;
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `votosxcriterio`
 --
 
-DROP TABLE IF EXISTS `votosxcriterio`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `votosxcriterio` (
-  `idVotosXCriterio` int(11) NOT NULL AUTO_INCREMENT,
+  `idVotosXCriterio` int(11) NOT NULL,
   `idCriterioXEncuesta` int(11) NOT NULL,
   `idUsuarioVotante` int(11) NOT NULL,
-  `idEtapaActual` int(11) NOT NULL,
-  PRIMARY KEY (`idVotosXCriterio`),
-  KEY `fk_votos_criterio_idx` (`idCriterioXEncuesta`),
-  KEY `fk_votos_usuario_idx` (`idUsuarioVotante`),
-  KEY `fk_votos_etapa_idx` (`idEtapaActual`),
-  CONSTRAINT `fk_votos_criterio` FOREIGN KEY (`idCriterioXEncuesta`) REFERENCES `criteriosxencuesta` (`idCriteriosXEncuesta`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_votos_etapa` FOREIGN KEY (`idEtapaActual`) REFERENCES `etapas` (`idEtapas`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_votos_usuario` FOREIGN KEY (`idUsuarioVotante`) REFERENCES `usuarios` (`idUsuarios`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  `idEtapaActual` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `votosxcriterio`
+-- Indexes for dumped tables
 --
 
-LOCK TABLES `votosxcriterio` WRITE;
-/*!40000 ALTER TABLE `votosxcriterio` DISABLE KEYS */;
-/*!40000 ALTER TABLE `votosxcriterio` ENABLE KEYS */;
-UNLOCK TABLES;
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+--
+-- Indexes for table `criteriosxencuesta`
+--
+ALTER TABLE `criteriosxencuesta`
+  ADD PRIMARY KEY (`idCriteriosXEncuesta`),
+  ADD KEY `fk_criterios_encuesta_idx` (`idEncuesta`),
+  ADD KEY `fk_criterios_propuestopor_idx` (`propuestoPor`);
 
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+--
+-- Indexes for table `curso`
+--
+ALTER TABLE `curso`
+  ADD PRIMARY KEY (`idCurso`);
+
+--
+-- Indexes for table `encuestas`
+--
+ALTER TABLE `encuestas`
+  ADD PRIMARY KEY (`idEncuestas`),
+  ADD KEY `fk_encuesta_creador_idx` (`creador`),
+  ADD KEY `fk_encuesta_curso_idx` (`curso`),
+  ADD KEY `fk_encuesta_materia_idx` (`materia`),
+  ADD KEY `fk_encuesta_etapa_idx` (`etapaActual`);
+
+--
+-- Indexes for table `etapas`
+--
+ALTER TABLE `etapas`
+  ADD PRIMARY KEY (`idEtapas`);
+
+--
+-- Indexes for table `materias`
+--
+ALTER TABLE `materias`
+  ADD PRIMARY KEY (`idMaterias`);
+
+--
+-- Indexes for table `respuestasxcriterio`
+--
+ALTER TABLE `respuestasxcriterio`
+  ADD PRIMARY KEY (`idRespuestasXCriterio`),
+  ADD KEY `fk_respuestas_criterio_idx` (`idCriterioXEncuesta`),
+  ADD KEY `fk_respuestas_usuario_idx` (`idUsuario`);
+
+--
+-- Indexes for table `roles`
+--
+ALTER TABLE `roles`
+  ADD PRIMARY KEY (`idRoles`);
+
+--
+-- Indexes for table `usuarios`
+--
+ALTER TABLE `usuarios`
+  ADD PRIMARY KEY (`idUsuarios`),
+  ADD UNIQUE KEY `legajo_UNIQUE` (`legajo`),
+  ADD KEY `fk_usuario_rol_idx` (`idRol`);
+
+--
+-- Indexes for table `usuariosxencuesta`
+--
+ALTER TABLE `usuariosxencuesta`
+  ADD PRIMARY KEY (`idUsuariosXEncuesta`),
+  ADD KEY `fk_userXEncuesta_encuesta_idx` (`idEncuesta`),
+  ADD KEY `fk_userXEncuesta_usuario_idx` (`idUsuario`);
+
+--
+-- Indexes for table `votosxcriterio`
+--
+ALTER TABLE `votosxcriterio`
+  ADD PRIMARY KEY (`idVotosXCriterio`),
+  ADD KEY `fk_votos_criterio_idx` (`idCriterioXEncuesta`),
+  ADD KEY `fk_votos_usuario_idx` (`idUsuarioVotante`),
+  ADD KEY `fk_votos_etapa_idx` (`idEtapaActual`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `criteriosxencuesta`
+--
+ALTER TABLE `criteriosxencuesta`
+  MODIFY `idCriteriosXEncuesta` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `curso`
+--
+ALTER TABLE `curso`
+  MODIFY `idCurso` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `encuestas`
+--
+ALTER TABLE `encuestas`
+  MODIFY `idEncuestas` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `etapas`
+--
+ALTER TABLE `etapas`
+  MODIFY `idEtapas` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `materias`
+--
+ALTER TABLE `materias`
+  MODIFY `idMaterias` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT for table `respuestasxcriterio`
+--
+ALTER TABLE `respuestasxcriterio`
+  MODIFY `idRespuestasXCriterio` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `roles`
+--
+ALTER TABLE `roles`
+  MODIFY `idRoles` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `usuarios`
+--
+ALTER TABLE `usuarios`
+  MODIFY `idUsuarios` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `usuariosxencuesta`
+--
+ALTER TABLE `usuariosxencuesta`
+  MODIFY `idUsuariosXEncuesta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- AUTO_INCREMENT for table `votosxcriterio`
+--
+ALTER TABLE `votosxcriterio`
+  MODIFY `idVotosXCriterio` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `criteriosxencuesta`
+--
+ALTER TABLE `criteriosxencuesta`
+  ADD CONSTRAINT `fk_criterios_encuesta` FOREIGN KEY (`idEncuesta`) REFERENCES `encuestas` (`idEncuestas`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `fk_criterios_propuestopor` FOREIGN KEY (`propuestoPor`) REFERENCES `usuarios` (`idUsuarios`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `encuestas`
+--
+ALTER TABLE `encuestas`
+  ADD CONSTRAINT `fk_encuesta_creador` FOREIGN KEY (`creador`) REFERENCES `usuarios` (`idUsuarios`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `fk_encuesta_curso` FOREIGN KEY (`curso`) REFERENCES `curso` (`idCurso`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `fk_encuesta_etapa` FOREIGN KEY (`etapaActual`) REFERENCES `etapas` (`idEtapas`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `fk_encuesta_materia` FOREIGN KEY (`materia`) REFERENCES `materias` (`idMaterias`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `respuestasxcriterio`
+--
+ALTER TABLE `respuestasxcriterio`
+  ADD CONSTRAINT `fk_respuestas_criterio` FOREIGN KEY (`idCriterioXEncuesta`) REFERENCES `criteriosxencuesta` (`idCriteriosXEncuesta`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `fk_respuestas_usuario` FOREIGN KEY (`idUsuario`) REFERENCES `usuarios` (`idUsuarios`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `usuarios`
+--
+ALTER TABLE `usuarios`
+  ADD CONSTRAINT `fk_usuario_rol` FOREIGN KEY (`idRol`) REFERENCES `roles` (`idRoles`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `usuariosxencuesta`
+--
+ALTER TABLE `usuariosxencuesta`
+  ADD CONSTRAINT `fk_userXEncuesta_encuesta` FOREIGN KEY (`idEncuesta`) REFERENCES `encuestas` (`idEncuestas`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `fk_userXEncuesta_usuario` FOREIGN KEY (`idUsuario`) REFERENCES `usuarios` (`idUsuarios`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `votosxcriterio`
+--
+ALTER TABLE `votosxcriterio`
+  ADD CONSTRAINT `fk_votos_criterio` FOREIGN KEY (`idCriterioXEncuesta`) REFERENCES `criteriosxencuesta` (`idCriteriosXEncuesta`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `fk_votos_etapa` FOREIGN KEY (`idEtapaActual`) REFERENCES `etapas` (`idEtapas`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `fk_votos_usuario` FOREIGN KEY (`idUsuarioVotante`) REFERENCES `usuarios` (`idUsuarios`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+COMMIT;
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-
--- Dump completed on 2018-02-09 21:19:58
