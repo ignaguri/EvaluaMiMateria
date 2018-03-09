@@ -15,6 +15,12 @@ export default {
       msg: 'Bienvenido a la App encuestadora'
     }
   },
+  beforeRouteEnter (to, from, next) {
+    next(vm => {
+      const a = require('../api')
+      a.default.logout(vm)
+    })
+  },
   methods: {
     registrarse () {
       this.$router.push('registrar')

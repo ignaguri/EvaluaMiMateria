@@ -38,6 +38,10 @@ export default {
         return [false, error]
       })
   },
+  logout (ctx) {
+    sessionStorage.clear()
+    ctx.$router.push('/')
+  },
   getNombreLogged () {
     return sessionStorage.getItem('nombre')
   },
@@ -201,6 +205,26 @@ export default {
         return false
       })
   },
+  getEncuestasPropietarias () {
+    if (!this.checkLogin()) return Promise.reject(new Error('Not logged in'))
+    let creador = this.checkLogin()
+    return axios.get(URL + 'encuestas' + '?filter=creador,eq,' + creador + '&transform=1')
+      .then(creadas => {
+        let encuestas = creadas.data.encuestas
+        let promesas = []
+        encuestas.forEach(encuesta => {
+          promesas.push(this.getEncuestaFull(encuesta.idEncuestas))
+        })
+        return Promise.all(promesas)
+      })
+      .then(fin => {
+        return fin
+      })
+      .catch(function (error) {
+        console.log(error)
+        return false
+      })
+  },
   getEncuestaFull (id) {
     if (!this.checkLogin()) return Promise.reject(new Error('Not logged in'))
     return axios.get(URL + 'encuestas/' + id)
@@ -224,7 +248,7 @@ export default {
   populateEncuesta (e) {
     return this.getUsuario(e.creador)
       .then(user => {
-        e.creador = user.nombre + ', ' + user.apellido
+        e.creador = user.apellido + ', ' + user.nombre
         return this.getCurso(e.curso)
       })
       .then(curso => {

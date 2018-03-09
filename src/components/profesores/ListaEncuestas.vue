@@ -25,7 +25,7 @@ import encuesta from './Encuesta.vue'
       data () {
         return {
           titulo: 'Encuestas',
-          subtitulo: 'Lista de las encuestas actualmente creadas',
+          subtitulo: 'Lista de las encuestas creadas por ti',
           columnas: ['Id', 'Nombre', 'Curso', 'Materia', 'Creador', 'Etapa'],
           filas: [],
           encuesta: null
@@ -41,7 +41,7 @@ import encuesta from './Encuesta.vue'
       methods: {
         cargarEncuestas () {
           this.filas = []
-          api.getEncuestasFull()
+          api.getEncuestasPropietarias()
             .then(r => {
               r.forEach(e => {
                 this.filas.push({

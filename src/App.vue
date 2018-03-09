@@ -11,12 +11,12 @@
 </template>
 
 <script>
+import api from './api'
 export default {
   name: 'App',
   methods: {
     logout () {
-      sessionStorage.clear()
-      this.$router.push('/')
+      api.logout(this)
     }
   }
 }
