@@ -2717,7 +2717,7 @@ class PHP_CRUD_API {
      'dbengine'=>'MySQL',
      'hostname'=>'localhost',
      'username'=>'root',
-     'password'=>'root',
+     'password'=>'tarado',
      'database'=>'appencuestadora',
      'charset'=>'utf8'
  ));

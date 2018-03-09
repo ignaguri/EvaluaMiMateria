@@ -1,6 +1,8 @@
 import axios from 'axios'
-const URL = process.env.API_URL
+// import php_transform from './php_crud_api_transform'
 
+const URL = process.env.API_URL
+// TODO: transformar todos los metodos que no usan ?transform=1
 export default {
   test () {
     return axios.get(URL + 'api.php')
@@ -126,8 +128,25 @@ export default {
         return false
       })
   },
+  getEncuesta (id) {
+    if (!this.checkLogin()) return Promise.reject(new Error('Not logged in'))
+    return axios.get(URL + 'encuestas/' + id + '?transform=1')
+      .then(function (response) {
+        return response.data
+      })
+      .catch(function (error) {
+        console.log(error)
+        return false
+      })
+  },
   getEncuestasFull () {
     if (!this.checkLogin()) return Promise.reject(new Error('Not logged in'))
+    // TODO: mejorar, usando la sintaxis de abajo para ahorrarse el populate
+    // return axios.get(URL + 'encuestas?include=curso,materias,etapas&transform=1')
+    //   .then(r => {
+    //     console.log('raw', r.data)
+    //     return r.data
+    //   })
     return axios.get(URL + 'encuestas')
       .then(r => {
         return this.dbArrayToObject(r.data.encuestas)
@@ -238,6 +257,47 @@ export default {
     return axios.get(URL + 'etapas/' + id)
       .then(function (response) {
         return response.data
+      })
+      .catch(function (error) {
+        console.log(error)
+        return false
+      })
+  },
+  cambiarEtapa (idEncuesta, proxEtapa, fechaFin) {
+    if (!this.checkLogin()) return Promise.reject(new Error('Not logged in'))
+    let idEtapa = 1
+    switch (proxEtapa) {
+      case 'Votación de criterios':
+        idEtapa = 2
+        break
+      case 'Priorización':
+        idEtapa = 3
+        break
+      case 'Habilitada':
+        idEtapa = 4
+        break
+      case 'Cerrada':
+        idEtapa = 5
+        break
+      default:
+        console.log('default', proxEtapa)
+    }
+    return axios.put(URL + 'encuestas/' + idEncuesta, { etapaActual: idEtapa, fechaFinEtapaActual: new Date(fechaFin) })
+      .then(r => {
+        if (r.data > 0) return true
+        else return false
+      })
+      .catch(function (error) {
+        console.log(error)
+        return false
+      })
+  },
+  generarCodigo (idEncuesta, codigo) {
+    if (!this.checkLogin()) return Promise.reject(new Error('Not logged in'))
+    return axios.put(URL + 'encuestas/' + idEncuesta, { codigo: codigo })
+      .then(r => {
+        if (r.data > 0) return codigo
+        else return false
       })
       .catch(function (error) {
         console.log(error)
