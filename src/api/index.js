@@ -381,5 +381,33 @@ export default {
           return false
         }
       })
+  },
+  getCriteriosXEncuesta (encuesta) {
+    if (!this.checkLogin()) return Promise.reject(new Error('Not logged in'))
+    return axios.get(URL + 'criteriosxencuesta' + '?filter=idEncuesta,eq,' + encuesta + '&transform=1')
+      .then(function (response) {
+        return response.data.criteriosxencuesta
+      })
+      .catch(function (error) {
+        console.log(error)
+        return false
+      })
+  },
+  postCriteriosXEncuesta (criterio, encuesta) {
+    if (!this.checkLogin()) return Promise.reject(new Error('Not logged in'))
+    const body = {
+      idEncuesta: encuesta,
+      criterio: criterio,
+      propuestoPor: this.checkLogin(),
+      esDefinitivo: false
+    }
+    return axios.post(URL + 'criteriosxencuesta', body)
+      .then(r => {
+        return true
+      })
+      .catch(error => {
+        console.log(error)
+        return false
+      })
   }
 }

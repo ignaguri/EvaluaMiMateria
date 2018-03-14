@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Mar 09, 2018 at 06:00 PM
+-- Generation Time: Mar 14, 2018 at 06:01 PM
 -- Server version: 5.7.21
 -- PHP Version: 7.1.7
 
@@ -31,10 +31,20 @@ SET time_zone = "+00:00";
 CREATE TABLE `criteriosxencuesta` (
   `idCriteriosXEncuesta` int(11) NOT NULL,
   `idEncuesta` int(11) NOT NULL,
-  `pregunta` tinytext NOT NULL,
+  `criterio` tinytext NOT NULL,
   `propuestoPor` int(11) DEFAULT NULL,
   `esDefinitivo` tinyint(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `criteriosxencuesta`
+--
+
+INSERT INTO `criteriosxencuesta` (`idCriteriosXEncuesta`, `idEncuesta`, `criterio`, `propuestoPor`, `esDefinitivo`) VALUES
+(1, 1, 'Un criterio de prueba', 2, 0),
+(2, 1, 'Otro criterio para votar', 2, 0),
+(3, 1, 'otrrrrrrrrra', 2, 0),
+(4, 1, 'daaaaaaaaale', 2, 0);
 
 -- --------------------------------------------------------
 
@@ -200,6 +210,13 @@ CREATE TABLE `usuariosxencuesta` (
   `idUsuario` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Dumping data for table `usuariosxencuesta`
+--
+
+INSERT INTO `usuariosxencuesta` (`idUsuariosXEncuesta`, `idEncuesta`, `idUsuario`) VALUES
+(1, 1, 2);
+
 -- --------------------------------------------------------
 
 --
@@ -300,7 +317,7 @@ ALTER TABLE `votosxcriterio`
 -- AUTO_INCREMENT for table `criteriosxencuesta`
 --
 ALTER TABLE `criteriosxencuesta`
-  MODIFY `idCriteriosXEncuesta` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `idCriteriosXEncuesta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `curso`
@@ -348,7 +365,7 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT for table `usuariosxencuesta`
 --
 ALTER TABLE `usuariosxencuesta`
-  MODIFY `idUsuariosXEncuesta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `idUsuariosXEncuesta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `votosxcriterio`
