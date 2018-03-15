@@ -48,6 +48,7 @@ import listaCriterios from './listaCriterios'
           .then(r => {
             if (r) {
               alert('Exito')
+              this.criterio = null
               this.$refs.lista.cargarCriterios()
             } else {
               alert('Error')

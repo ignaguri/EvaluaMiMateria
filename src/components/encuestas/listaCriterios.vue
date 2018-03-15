@@ -1,22 +1,19 @@
 <template>
     <div>
-      <!--<div v-for="c in criterios" :key="c.idCriteriosXEncuesta">-->
-        <!--<div class="alert-info">{{c.criterio}}</div>-->
-      <!--</div>-->
-      <ul>
-        <template v-for="c in criterios">
-          <li :key="c.idCriteriosXEncuesta">{{ c.criterio }}</li>
-        </template>
-      </ul>
+        <criterio-view v-for="c in criterios" :criterio="c" :key="c.idCriterioXEncuesta"></criterio-view>
     </div>
 </template>
 <script>
 /* eslint-disable indent */
 import api from '../../api'
+import criterioView from './criterio'
     export default {
       props: [
         'encuesta'
       ],
+      components: {
+        criterioView
+      },
       data () {
         return {
           criterios: []

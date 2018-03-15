@@ -388,6 +388,16 @@ export default {
       .then(function (response) {
         return response.data.criteriosxencuesta
       })
+      .then(data => {
+        let promesas = []
+        data.forEach(cxe => {
+          promesas.push(this.populateCriterioXEncuesta(cxe))
+        })
+        return Promise.all(promesas)
+      })
+      .then(fin => {
+        return fin
+      })
       .catch(function (error) {
         console.log(error)
         return false
@@ -408,6 +418,14 @@ export default {
       .catch(error => {
         console.log(error)
         return false
+      })
+  },
+  populateCriterioXEncuesta (e) {
+    return this.getUsuario(e.propuestoPor)
+      .then(user => {
+        e.propuestoPor = user.apellido + ', ' + user.nombre
+        e.esDefinitivo = e.esDefinitivo !== 0
+        return e
       })
   }
 }
