@@ -17,7 +17,7 @@
         <!--</div>-->
     <!--</div>-->
         <div class="container-fluid">
-          <component :is="current" :encuesta="id"></component>
+          <component :is="current" :idEncuesta="id" :encuesta="encuesta"></component>
         </div>
         <!--<div class="col">-->
           <!--<component v-if="etapa == 'Votacion Criterios'" v-bind:is="votacion"></component>-->

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <criterio-view v-for="c in criterios" :criterio="c" :key="c.idCriterioXEncuesta"></criterio-view>
+        <criterio-view v-for="c in criterios" :criterio="c" :key="c.idCriterioXEncuesta" @voto="capturarVoto"></criterio-view>
     </div>
 </template>
 <script>
@@ -16,7 +16,8 @@ import criterioView from './criterio'
       },
       data () {
         return {
-          criterios: []
+          criterios: [],
+          votados: []
         }
       },
       mounted () {
@@ -28,6 +29,13 @@ import criterioView from './criterio'
             .then(r => {
               this.criterios = r
             })
+        },
+        capturarVoto (e) {
+          if (e.votado) {
+            this.votados.push(e.id)
+          } else {
+            this.votados = this.votados.filter(c => c !== e.id)
+          }
         }
       }
     }
