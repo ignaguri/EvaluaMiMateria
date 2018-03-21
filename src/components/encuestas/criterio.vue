@@ -10,19 +10,24 @@
   <!--</div>-->
   <form>
     <div class="form-row align-items-center">
+      <div class="col-1">
+        <a href="#" @click.prevent="borrar" class="badge badge-danger">Borrar</a>
+      </div>
       <div class="col-10">
         <input type="text" class="form-control" disabled :value="criterio.criterio" title="Criterio"/>
       </div>
-      <div class="col-2">
-          <label :for="criterio.idCriterioXEncuesta">Votar
+      <div class="col-1">
+          <!--<label :for="criterio.idCriterioXEncuesta">-->
+            <a href="#" @click.prevent="checkVotar" ref="btnVotar" class="badge badge-success">Votar</a>
             <!--<input type="checkbox" autocomplete="off" id="checkbox" name="checkbox" :value="value" v-model="votados">-->
             <input
               type="checkbox"
               :id="criterio.idCriterioXEncuesta"
               v-model="votado"
               autocomplete="off"
+              ref="chkVotar"
             >
-          </label>
+          <!--</label>-->
 <!--        <div data-toggle="buttons">
           <label class="btn btn-success" @click="votar">
             <input type="checkbox" value="value" autocomplete="off" v-model="votado"> Votar
@@ -31,10 +36,12 @@
       </div>
     </div>
     <div class="form-row align-items-center">
+      <div class="col-1">
+      </div>
       <div class="col-10">
         <small class="form-text text-muted">Propuesto por: {{criterio.propuestoPor}}</small>
       </div>
-      <div class="col-2">
+      <div class="col-1">
       </div>
     </div>
   </form>
@@ -43,7 +50,8 @@
 <script>
 export default {
   props: [
-    'criterio'
+    'criterio',
+    'canVotar'
   ],
   data () {
     return {
@@ -53,11 +61,37 @@ export default {
   watch: {
     votado: function () {
       this.votar()
+    },
+    canVotar: function () {
+      this.checkVotability()
     }
   },
   methods: {
     votar () {
       this.$emit('voto', {id: this.criterio.idCriteriosXEncuesta, votado: this.votado})
+    },
+    checkVotability () {
+      if (this.canVotar) {
+        this.$refs.chkVotar.disabled = false
+      } else {
+        if (!this.$refs.chkVotar.checked) {
+          this.$refs.chkVotar.disabled = true
+        }
+      }
+    },
+    checkVotar () {
+      if (this.canVotar) {
+        this.$refs.chkVotar.checked = !this.$refs.chkVotar.checked
+        this.votado = !this.votado
+      } else {
+        if (this.$refs.chkVotar.checked) {
+          this.$refs.chkVotar.checked = !this.$refs.chkVotar.checked
+          this.votado = !this.votado
+        }
+      }
+    },
+    borrar () {
+      this.$emit('borrar', this.criterio.idCriteriosXEncuesta)
     }
   }
 }

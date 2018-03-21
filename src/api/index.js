@@ -351,6 +351,20 @@ export default {
         return false
       })
   },
+  etapaAId (etapa) {
+    switch (etapa) {
+      case 'Votacion Criterios':
+        return 2
+      case 'Priorizacion':
+        return 3
+      case 'Habilitada':
+        return 4
+      case 'Cerrada':
+        return 5
+      default:
+        return false
+    }
+  },
   generarCodigo (idEncuesta, codigo) {
     if (!this.checkLogin()) return Promise.reject(new Error('Not logged in'))
     return axios.put(URL + 'encuestas/' + idEncuesta, { codigo: codigo })
@@ -426,6 +440,46 @@ export default {
         e.propuestoPor = user.apellido + ', ' + user.nombre
         e.esDefinitivo = e.esDefinitivo !== 0
         return e
+      })
+  },
+  borrarCriterio (id) {
+    if (!this.checkLogin()) return Promise.reject(new Error('Not logged in'))
+    return axios.get(URL + 'criteriosxencuesta/' + id + '&transform=1')
+      .then(r => {
+        const criterio = r.data
+        const userId = Number(this.checkLogin())
+        if (criterio.propuestoPor !== userId) {
+          alert('Error al borrar. El criterio no fue propuesto por el usuario intentando borrarlo.')
+          return false
+        }
+        return axios.delete(URL + 'criteriosxencuesta/' + id)
+      })
+      .then(r => {
+        return r.data > 0
+      })
+      .catch(function (error) {
+        console.log(error)
+        return false
+      })
+  },
+  guardarVotacion (criterios, etapa) {
+    if (!this.checkLogin()) return Promise.reject(new Error('Not logged in'))
+    const userId = Number(this.checkLogin())
+    const body = []
+    criterios.forEach(c => {
+      body.push({
+        idCriterioXEncuesta: c,
+        idUsuarioVotante: userId,
+        idEtapaActual: this.etapaAId(etapa)
+      })
+    })
+    return axios.post(URL + 'votosxcriterio', body)
+      .then(r => {
+        return true
+      })
+      .catch(error => {
+        console.log(error)
+        return false
       })
   }
 }

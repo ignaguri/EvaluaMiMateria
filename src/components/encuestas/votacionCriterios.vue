@@ -14,18 +14,21 @@
         </div>
         <div class="form-group row">
           <!--<label for="cantCriterios" class="col-3 col-form-label">Criterios propuestos</label>-->
-          <div class="col-6">
-            <div class="progress">
-              <div class="progress-bar bg-info" id="cantCriterios" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
-                2/12 Criterios
+          <div class="col-5">
+            <div class="progress" style="height: 31px;">
+              <div class="progress-bar bg-warning" id="cantCriterios" role="progressbar" :style="barraCriteriosWidth" style="font-size: 1rem">
+                {{cantCriterios}}/{{cantMaxCriterios}} Criterios
               </div>
             </div>
           </div>
+          <div class="col-2">
+            <button type="button" class="btn btn-sm btn-success" @click="guardar">Guardar</button>
+          </div>
           <!--<label for="cantVotos" class="col-3 col-form-label">Cant max votos</label>-->
-          <div class="col-6">
-            <div class="progress">
-              <div class="progress-bar bg-success" id="cantVotos" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
-                2/12 Votos
+          <div class="col-5">
+            <div class="progress" style="height: 31px;">
+              <div class="progress-bar bg-info" id="cantVotos" role="progressbar" :style="barraVotosWidth" style="font-size: 1rem">
+                {{cantVotos}}/{{cantMaxVotos}} Votos
               </div>
             </div>
           </div>
@@ -35,7 +38,7 @@
     <div class="row">
       <div class="col-12">
         <div class="text-center">
-          <lista-criterios ref="lista" :encuesta="idEncuesta"></lista-criterios>
+          <lista-criterios ref="lista" :encuesta="idEncuesta" :canVotar="canVotar" @criterios="capturarCriterios" @voto="capturarVoto"></lista-criterios>
         </div>
       </div>
     </div>
@@ -56,16 +59,24 @@ import listaCriterios from './listaCriterios'
     data () {
       return {
         criterio: null,
+        cantCriterios: null,
         cantMaxCriterios: this.encuesta.cantMaxCriterios,
-        cantMaxVotos: this.encuesta.cantMaxVotosPorPersona
+        cantVotos: null,
+        cantMaxVotos: this.encuesta.cantMaxVotosPorPersona,
+        barraCriteriosWidth: 'width: 0%',
+        barraVotosWidth: 'width: 0%',
+        canVotar: true,
+        criteriosVotados: []
       }
     },
     mounted () {
-      console.log('max criterios', this.cantMaxCriterios, 'cant votos', this.cantMaxVotos)
     },
     methods: {
       agregar () {
-        console.log('implementar', this.criterio)
+        if (this.cantCriterios === this.cantMaxCriterios) {
+          alert('Cantidad máxima de criterios alcanzada')
+          return
+        }
         api.postCriteriosXEncuesta(this.criterio, this.idEncuesta)
           .then(r => {
             if (r) {
@@ -74,6 +85,33 @@ import listaCriterios from './listaCriterios'
               this.$refs.lista.cargarCriterios()
             } else {
               alert('Error')
+            }
+          })
+      },
+      capturarVoto (e) {
+        this.criteriosVotados = e
+        this.cantVotos = e.length
+        let porcentaje = (this.cantVotos / this.cantMaxVotos) * 100
+        this.barraVotosWidth = 'width:' + porcentaje + '%'
+        if (this.cantVotos >= this.cantMaxVotos) {
+          this.canVotar = false
+        } else {
+          this.canVotar = true
+        }
+      },
+      capturarCriterios (e) {
+        this.cantCriterios = e
+        let porcentaje = (this.cantCriterios / this.cantMaxCriterios) * 100
+        this.barraCriteriosWidth = 'width:' + porcentaje + '%'
+      },
+      guardar () {
+        api.guardarVotacion(this.criteriosVotados, this.encuesta.etapaActual)
+          .then(r => {
+            if (r) {
+              alert('Guardado con éxito!')
+              this.$emit('volver')
+            } else {
+              alert('Error al guardar. Intente nuevamente')
             }
           })
       }
