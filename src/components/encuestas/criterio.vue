@@ -48,7 +48,9 @@
 </template>
 
 <script>
-export default {
+/* eslint-disable indent */
+import api from '../../api'
+  export default {
   props: [
     'criterio',
     'canVotar'
@@ -66,6 +68,9 @@ export default {
       this.checkVotability()
     }
   },
+    mounted () {
+      this.getVotos()
+    },
   methods: {
     votar () {
       this.$emit('voto', {id: this.criterio.idCriteriosXEncuesta, votado: this.votado})
@@ -92,6 +97,16 @@ export default {
     },
     borrar () {
       this.$emit('borrar', this.criterio.idCriteriosXEncuesta)
+    },
+    getVotos () {
+      api.getVotosCriterio(this.criterio.idCriteriosXEncuesta, this.criterio.etapaActual)
+        .then(r => {
+          if (r) {
+            r.forEach(v => {
+              console.log(v)
+            })
+          }
+        })
     }
   }
 }

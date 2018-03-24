@@ -481,5 +481,26 @@ export default {
         console.log(error)
         return false
       })
+  },
+  getVotosCriterio (criterio, etapa) {
+    if (!this.checkLogin()) return Promise.reject(new Error('Not logged in'))
+    return axios.get(URL + 'votosxcriterio' +
+      '?filter[]=idCriterioXEncuesta,eq,' + criterio +
+      '&filter[]=idEtapaActual,eq' + etapa +
+      '&satisfy=all' + '&transform=1')
+      .then(function (response) {
+        return response.data.votosxcriterio
+      })
+      .then(v => {
+        if (v.length > 0) {
+          return v
+        } else {
+          return null
+        }
+      })
+      .catch(function (error) {
+        console.log(error)
+        return false
+      })
   }
 }
