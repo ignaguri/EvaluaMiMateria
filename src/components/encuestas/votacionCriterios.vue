@@ -105,7 +105,7 @@ import listaCriterios from './listaCriterios'
         this.barraCriteriosWidth = 'width:' + porcentaje + '%'
       },
       guardar () {
-        api.guardarVotacion(this.criteriosVotados, this.encuesta.etapaActual)
+        api.guardarVotacion(this.criteriosVotados, this.encuesta.etapaActual, this.idEncuesta)
           .then(r => {
             if (r) {
               alert('Guardado con éxito!')

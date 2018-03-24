@@ -39,7 +39,7 @@
       <div class="col-1">
       </div>
       <div class="col-10">
-        <small class="form-text text-muted">Propuesto por: {{criterio.propuestoPor}}</small>
+        <small class="form-text text-muted">Total votos: {{votos}} - Propuesto por: {{criterio.propuestoPor}}</small>
       </div>
       <div class="col-1">
       </div>
@@ -57,7 +57,8 @@ import api from '../../api'
   ],
   data () {
     return {
-      votado: false
+      votado: false,
+      votos: 0
     }
   },
   watch: {
@@ -102,8 +103,12 @@ import api from '../../api'
       api.getVotosCriterio(this.criterio.idCriteriosXEncuesta, this.criterio.etapaActual)
         .then(r => {
           if (r) {
+            this.votos = r.length
+            const user = Number(api.checkLogin())
             r.forEach(v => {
-              console.log(v)
+              if (v.idUsuarioVotante === user) {
+                this.votado = true
+              }
             })
           }
         })

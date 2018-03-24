@@ -396,6 +396,17 @@ export default {
         }
       })
   },
+  getCriterio (id) {
+    if (!this.checkLogin()) return Promise.reject(new Error('Not logged in'))
+    return axios.get(URL + 'criteriosxencuesta/' + id + '&transform=1')
+      .then(r => {
+        return r.data
+      })
+      .catch(function (error) {
+        console.log(error)
+        return false
+      })
+  },
   getCriteriosXEncuesta (encuesta) {
     if (!this.checkLogin()) return Promise.reject(new Error('Not logged in'))
     return axios.get(URL + 'criteriosxencuesta' + '?filter=idEncuesta,eq,' + encuesta + '&transform=1')
@@ -462,24 +473,31 @@ export default {
         return false
       })
   },
-  guardarVotacion (criterios, etapa) {
+  guardarVotacion (criterios, etapa, encuesta) {
     if (!this.checkLogin()) return Promise.reject(new Error('Not logged in'))
     const userId = Number(this.checkLogin())
-    const body = []
-    criterios.forEach(c => {
-      body.push({
-        idCriterioXEncuesta: c,
-        idUsuarioVotante: userId,
-        idEtapaActual: this.etapaAId(etapa)
-      })
-    })
-    return axios.post(URL + 'votosxcriterio', body)
-      .then(r => {
-        return true
-      })
-      .catch(error => {
-        console.log(error)
-        return false
+    // BORRAR LOS VOTOS ANTERIORES
+    return this.borrarVotos(encuesta, this.etapaAId(etapa), userId)
+      .then(borrados => {
+        // FIN BORRAR
+        // NUEVO VOTO
+        const body = []
+        criterios.forEach(c => {
+          body.push({
+            idCriterioXEncuesta: c,
+            idUsuarioVotante: userId,
+            idEtapaActual: this.etapaAId(etapa)
+          })
+        })
+        return axios.post(URL + 'votosxcriterio', body)
+          .then(r => {
+            return true
+          })
+          .catch(error => {
+            console.log(error)
+            return false
+          })
+        // FIN NUEVO VOTO
       })
   },
   getVotosCriterio (criterio, etapa) {
@@ -501,6 +519,71 @@ export default {
       .catch(function (error) {
         console.log(error)
         return false
+      })
+  },
+  getVotosXUser (etapa, user) {
+    if (!this.checkLogin()) return Promise.reject(new Error('Not logged in'))
+    return axios.get(URL + 'votosxcriterio' +
+      '?filter[]=idEtapaActual,eq,' + etapa +
+      '&filter[]=idUsuarioVotante,eq,' + user +
+      '&satisfy=all' + '&transform=1')
+      .then(function (response) {
+        return response.data.votosxcriterio
+      })
+      .then(v => {
+        if (v.length > 0) {
+          return v
+        } else {
+          return null
+        }
+      })
+      .catch(function (error) {
+        console.log(error)
+        return false
+      })
+  },
+  borrarVotos (encuesta, etapa, user) {
+    let votosViejos = null
+    return this.getVotosXUser(etapa, user)
+      .then(r => {
+        if (!r) throw Error('cool')
+        votosViejos = r
+        // con r.idCriterioXEncuesta buscar el id encuesta y borrar solo los que coincidan con la actual
+        let promesas = []
+        r.forEach(c => {
+          promesas.push(this.getCriterio(c.idCriterioXEncuesta))
+        })
+        return Promise.all(promesas)
+      })
+      .then(criterios => {
+        const idEncuesta = Number(encuesta)
+        let borrables = criterios.filter(c => c.idEncuesta === idEncuesta)
+        return borrables
+      })
+      .then(criterios => {
+        const aBorrar = votosViejos.filter(voto => {
+          for (let i = 0; i < criterios.length; i++) {
+            if (criterios[i].idCriteriosXEncuesta === voto.idCriterioXEncuesta) return true
+          }
+        })
+        let promesas = []
+        aBorrar.forEach(c => {
+          promesas.push(axios.delete(URL + 'votosxcriterio/' + c.idVotosXCriterio))
+        })
+        return Promise.all(promesas)
+      })
+      .then(borrados => {
+        const noBorrados = borrados.filter(b => b.data !== 1)
+        if (noBorrados.length > 0) return false
+        return borrados
+      })
+      .catch(err => {
+        console.log(err)
+        if (err.message === 'cool') {
+          return true
+        } else {
+          return false
+        }
       })
   }
 }
