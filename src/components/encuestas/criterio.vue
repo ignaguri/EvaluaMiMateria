@@ -11,7 +11,7 @@
   <form>
     <div class="form-row align-items-center">
       <div class="col-1">
-        <a href="#" @click.prevent="borrar" class="badge badge-danger">Borrar</a>
+        <a v-if="canBorrar" href="#" @click.prevent="borrar" class="badge badge-danger">Borrar</a>
       </div>
       <div class="col-10">
         <input type="text" class="form-control" disabled :value="criterio.criterio" title="Criterio"/>
@@ -53,7 +53,8 @@ import api from '../../api'
   export default {
   props: [
     'criterio',
-    'canVotar'
+    'canVotar',
+    'canBorrar'
   ],
   data () {
     return {

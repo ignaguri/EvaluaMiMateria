@@ -10,7 +10,8 @@ import criterioView from './criterio'
     export default {
       props: [
         'encuesta',
-        'canVotar'
+        'canVotar',
+        'canBorrar'
       ],
       components: {
         criterioView
