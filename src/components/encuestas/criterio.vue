@@ -18,7 +18,7 @@
       </div>
       <div class="col-1">
           <!--<label :for="criterio.idCriterioXEncuesta">-->
-            <a href="#" @click.prevent="checkVotar" ref="btnVotar" class="badge badge-success">Votar</a>
+            <a href="#" @click.prevent="checkVotar" ref="btnVotar" class="badge badge-success">{{textoBoton}}</a>
             <!--<input type="checkbox" autocomplete="off" id="checkbox" name="checkbox" :value="value" v-model="votados">-->
             <input
               type="checkbox"
@@ -51,15 +51,16 @@
 /* eslint-disable indent */
 import api from '../../api'
   export default {
-  props: [
-    'criterio',
-    'canVotar',
-    'canBorrar'
-  ],
+  props: {
+    criterio: Object,
+    canVotar: Boolean,
+    canBorrar: Boolean
+  },
   data () {
     return {
       votado: false,
-      votos: 0
+      votos: 0,
+      textoBoton: 'Votar'
     }
   },
   watch: {
@@ -101,16 +102,25 @@ import api from '../../api'
       this.$emit('borrar', this.criterio.idCriteriosXEncuesta)
     },
     getVotos () {
-      api.getVotosCriterio(this.criterio.idCriteriosXEncuesta, this.criterio.etapaActual)
+      api.getVotosCriterio(this.criterio.idCriteriosXEncuesta, this.criterio.idEncuesta)
         .then(r => {
-          if (r) {
-            this.votos = r.length
+          if (r.votosxcriterio) {
+            this.votos = r.length || 0
             const user = Number(api.checkLogin())
-            r.forEach(v => {
+            r.votosxcriterio.forEach(v => {
               if (v.idUsuarioVotante === user) {
                 this.votado = true
               }
             })
+          }
+          switch (r.etapaActual) {
+            case 1:
+            case 2:
+              this.textoBoton = 'Votar'
+              break
+            case 3:
+              this.textoBoton = 'Priorizar'
+                  break
           }
         })
     }

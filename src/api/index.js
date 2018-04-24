@@ -500,22 +500,28 @@ export default {
         // FIN NUEVO VOTO
       })
   },
-  getVotosCriterio (criterio, etapa) {
+  getVotosCriterio (criterio, encuesta) {
     if (!this.checkLogin()) return Promise.reject(new Error('Not logged in'))
-    return axios.get(URL + 'votosxcriterio' +
-      '?filter[]=idCriterioXEncuesta,eq,' + criterio +
-      '&filter[]=idEtapaActual,eq' + etapa +
-      '&satisfy=all' + '&transform=1')
+    let etapa = null
+    return this.getEncuesta(encuesta)
+      .then(enc => {
+        etapa = enc.etapaActual
+        return axios.get(URL + 'votosxcriterio' +
+          '?filter[]=idCriterioXEncuesta,eq,' + criterio +
+          '&filter[]=idEtapaActual,eq,' + etapa +
+          '&satisfy=all' + '&transform=1')
+      })
       .then(function (response) {
-        return response.data.votosxcriterio
+        response.data.etapaActual = etapa
+        return response.data
       })
-      .then(v => {
-        if (v.length > 0) {
-          return v
-        } else {
-          return null
-        }
-      })
+      // .then(v => {
+      //   if (v.length > 0) {
+      //     return v
+      //   } else {
+      //     return null
+      //   }
+      // })
       .catch(function (error) {
         console.log(error)
         return false

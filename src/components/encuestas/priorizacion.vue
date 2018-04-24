@@ -4,9 +4,9 @@
       <div class="col">
         <div class="text-center">
           <h4>Priorización de criterios</h4>
+          <p><small>Explicación sobre que debe priorizar y bla bla</small></p>
         </div>
         <div class="form-group row">
-          <!--<label for="cantCriterios" class="col-3 col-form-label">Criterios propuestos</label>-->
           <div class="col-5">
             <div class="progress" style="height: 31px;">
               <div class="progress-bar bg-warning" id="cantCriterios" role="progressbar" :style="barraCriteriosWidth" style="font-size: 1rem">
@@ -17,7 +17,6 @@
           <div class="col-2">
             <button type="button" class="btn btn-sm btn-success" @click="guardar">Guardar</button>
           </div>
-          <!--<label for="cantVotos" class="col-3 col-form-label">Cant max votos</label>-->
           <div class="col-5">
             <div class="progress" style="height: 31px;">
               <div class="progress-bar bg-info" id="cantVotos" role="progressbar" :style="barraVotosWidth" style="font-size: 1rem">
