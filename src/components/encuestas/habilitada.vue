@@ -1,28 +1,25 @@
 <template>
     <div>
       <p>HABILITADA</p>
+      <div v-for="c in criterios" :key="c.idCriteriosXEncuesta">
+        <criterio-view :criterio="c"></criterio-view>
+      </div>
     </div>
 </template>
 <script>
 /* eslint-disable indent */
 import api from '../../api'
+import criterioView from './criterioFinal'
     export default {
       props: [
         'idEncuesta'
       ],
+      components: {
+        criterioView
+      },
       data () {
         return {
-          encuesta: null,
-          nombre: null,
-          curso: null,
-          materia: null,
-          creador: null,
-          etapa: null,
-          creacion: null,
-          finEtapa: null,
-          cantMaxCriterios: null,
-          cantMaxVotosPorPersona: null,
-          codigo: null
+          criterios: null
         }
       },
       mounted () {
@@ -30,19 +27,9 @@ import api from '../../api'
       },
       methods: {
         cargarEncuesta () {
-          api.getEncuestaFull(this.idEncuesta)
+          api.getCriteriosXEncuesta(this.idEncuesta)
             .then(r => {
-              this.encuesta = r
-              this.nombre = r.nombre
-              this.curso = r.curso
-              this.materia = r.materia
-              this.creador = r.creador
-              this.etapa = r.etapaActual
-              this.creacion = r.fechaCreacion
-              this.finEtapa = r.fechaFinEtapaActual
-              this.cantMaxCriterios = r.cantMaxCriterios
-              this.cantMaxVotosPorPersona = r.cantMaxVotosPorPersona
-              this.codigo = r.codigo === null ? 'No generado' : r.codigo
+              this.criterios = r.filter(c => c.esDefinitivo)
             })
         },
         volver () {
