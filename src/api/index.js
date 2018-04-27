@@ -428,6 +428,41 @@ export default {
         return false
       })
   },
+  getCriteriosXEncuestaConVotos (encuesta) {
+    if (!this.checkLogin()) return Promise.reject(new Error('Not logged in'))
+    let criterios = null
+    return axios.get(URL + 'criteriosxencuesta' + '?filter=idEncuesta,eq,' + encuesta + '&transform=1')
+      .then(function (response) {
+        return response.data.criteriosxencuesta
+      })
+      .then(data => {
+        let promesas = []
+        data.forEach(cxe => {
+          promesas.push(this.populateCriterioXEncuesta(cxe))
+        })
+        return Promise.all(promesas)
+      })
+      .then(crit => {
+        criterios = crit
+        let promesas = []
+        crit.forEach(c => {
+          promesas.push(this.getVotosCriterio(c.idCriteriosXEncuesta, c.idEncuesta))
+        })
+        return Promise.all(promesas)
+      })
+      .then(ccv => {
+        criterios.forEach(c => {
+          let aux = ccv.find(voto => voto.criterio === c.idCriteriosXEncuesta)
+          c.etapaActual = aux.etapaActual
+          c.votos = aux.votosxcriterio
+        })
+        return criterios
+      })
+      .catch(function (error) {
+        console.log(error)
+        return false
+      })
+  },
   postCriteriosXEncuesta (criterio, encuesta) {
     if (!this.checkLogin()) return Promise.reject(new Error('Not logged in'))
     const body = {
@@ -513,15 +548,9 @@ export default {
       })
       .then(function (response) {
         response.data.etapaActual = etapa
+        response.data.criterio = criterio
         return response.data
       })
-      // .then(v => {
-      //   if (v.length > 0) {
-      //     return v
-      //   } else {
-      //     return null
-      //   }
-      // })
       .catch(function (error) {
         console.log(error)
         return false
@@ -590,6 +619,20 @@ export default {
         } else {
           return false
         }
+      })
+  },
+  guardarCriteriosDefinitivos (criterios) {
+    if (!this.checkLogin()) return Promise.reject(new Error('Not logged in'))
+    const body = criterios.map(c => {
+      return {esDefinitivo: true}
+    })
+    return axios.put(URL + 'criteriosxencuesta/' + criterios.toString(), body)
+      .then(r => {
+        return r.data.length > 0
+      })
+      .catch(function (error) {
+        console.log(error)
+        return false
       })
   }
 }

@@ -81,9 +81,11 @@ import api from '../../api'
     checkVotability () {
       if (this.canVotar) {
         this.$refs.chkVotar.disabled = false
+        this.$refs.btnVotar.className = 'badge badge-success'
       } else {
         if (!this.$refs.chkVotar.checked) {
           this.$refs.chkVotar.disabled = true
+          this.$refs.btnVotar.className = 'badge badge-secondary'
         }
       }
     },
@@ -105,7 +107,7 @@ import api from '../../api'
       api.getVotosCriterio(this.criterio.idCriteriosXEncuesta, this.criterio.idEncuesta)
         .then(r => {
           if (r.votosxcriterio) {
-            this.votos = r.length || 0
+            this.votos = r.votosxcriterio.length || 0
             const user = Number(api.checkLogin())
             r.votosxcriterio.forEach(v => {
               if (v.idUsuarioVotante === user) {

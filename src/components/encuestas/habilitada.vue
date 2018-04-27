@@ -8,7 +8,7 @@
 import api from '../../api'
     export default {
       props: [
-        'id'
+        'idEncuesta'
       ],
       data () {
         return {
@@ -30,7 +30,7 @@ import api from '../../api'
       },
       methods: {
         cargarEncuesta () {
-          api.getEncuestaFull(this.id)
+          api.getEncuestaFull(this.idEncuesta)
             .then(r => {
               this.encuesta = r
               this.nombre = r.nombre
