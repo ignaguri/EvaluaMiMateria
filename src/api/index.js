@@ -11,6 +11,7 @@ export default {
       })
   },
   checkLogin () {
+    // TODO: chequear si algun metodo lo usa sin wrappearlo en Number() para poder devolverlo directamente wrappeado
     return sessionStorage.getItem('userId')
   },
   authorized (rol) {
@@ -463,6 +464,39 @@ export default {
         return false
       })
   },
+  getCriteriosDefinitivosConVotosXSemana (encuesta) {
+    if (!this.checkLogin()) return Promise.reject(new Error('Not logged in'))
+    const week = this.getWeekNumber(new Date())
+    let criterios
+    return axios.get(URL + 'criteriosxencuesta' + '?filter=idEncuesta,eq,' + encuesta + '&transform=1')
+      .then(function (response) {
+        return response.data.criteriosxencuesta
+      })
+      .then(data => {
+        return data.filter(c => c.esDefinitivo)
+      })
+      .then(crit => {
+        criterios = crit
+        let promesas = []
+        crit.forEach(c => {
+          promesas.push(this.getRespuestasXSemana(c.idCriteriosXEncuesta, week))
+        })
+        return Promise.all(promesas)
+      })
+      .then(ccv => {
+        criterios.forEach(c => {
+          let aux = ccv.filter(voto => {
+            return voto[0].idCriterioXEncuesta === c.idCriteriosXEncuesta
+          })
+          c.votos = aux[0]
+        })
+        return criterios
+      })
+      .catch(function (error) {
+        console.log(error)
+        return false
+      })
+  },
   postCriteriosXEncuesta (criterio, encuesta) {
     if (!this.checkLogin()) return Promise.reject(new Error('Not logged in'))
     const body = {
@@ -634,5 +668,69 @@ export default {
         console.log(error)
         return false
       })
+  },
+  guardarEncuesta (criterio, voto) {
+    if (!this.checkLogin()) return Promise.reject(new Error('Not logged in'))
+    const semana = this.getWeekNumber(new Date())
+    const userId = Number(this.checkLogin())
+    const body = {
+      idCriterioXEncuesta: criterio,
+      idUsuario: userId,
+      fecha: new Date(),
+      respuesta: voto,
+      semana: semana
+    }
+    return this.getRespuestasXSemana(criterio, semana)
+      .then(r => {
+        if (r.length > 0) {
+          return r.filter(v => v.idUsuario === userId)[0]
+        } else {
+          return null
+        }
+      })
+      .then(r => {
+        if (r) {
+          return axios.put(URL + 'respuestasxcriterio/' + r.idRespuestasXCriterio, body)
+        } else {
+          return axios.post(URL + 'respuestasxcriterio/', body)
+        }
+      })
+      .then(r => {
+        return r.data
+      })
+      .catch(function (error) {
+        console.log(error)
+        return false
+      })
+  },
+  getRespuestasXSemana (criterio, semana) {
+    if (!this.checkLogin()) return Promise.reject(new Error('Not logged in'))
+    return axios.get(URL + 'respuestasxcriterio' +
+      '?filter[]=idCriterioXEncuesta,eq,' +
+      criterio +
+      '&filter[]=semana,eq,' +
+      semana +
+      '&satisfy=all&transform=1')
+      .then(r => {
+        return r.data.respuestasxcriterio
+      })
+      .catch(function (error) {
+        console.log(error)
+        return false
+      })
+  },
+  getWeekNumber (d) {
+    // Copy date so don't modify original
+    d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()))
+    // Set to nearest Thursday: current date + 4 - current day number
+    // Make Sunday's day number 7
+    d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7))
+    // Get first day of year
+    const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1))
+    // Calculate full weeks to nearest Thursday
+    const weekNo = Math.ceil((((d - yearStart) / 86400000) + 1) / 7)
+    // Return array of year and week number
+    // return [d.getUTCFullYear(), weekNo]
+    return weekNo
   }
 }

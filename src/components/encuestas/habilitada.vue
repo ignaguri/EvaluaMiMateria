@@ -1,8 +1,8 @@
 <template>
     <div>
-      <p>HABILITADA</p>
+      <p>Encuesta para la semana #{{semana}}</p>
       <div v-for="c in criterios" :key="c.idCriteriosXEncuesta">
-        <criterio-view :criterio="c"></criterio-view>
+        <criterio-view :criterio="c" @voto="capturarVoto"></criterio-view>
       </div>
     </div>
 </template>
@@ -17,6 +17,11 @@ import criterioView from './criterioFinal'
       components: {
         criterioView
       },
+      computed: {
+        semana: function () {
+          return api.getWeekNumber(new Date())
+        }
+      },
       data () {
         return {
           criterios: null
@@ -27,13 +32,23 @@ import criterioView from './criterioFinal'
       },
       methods: {
         cargarEncuesta () {
-          api.getCriteriosXEncuesta(this.idEncuesta)
+          api.getCriteriosDefinitivosConVotosXSemana(this.idEncuesta)
             .then(r => {
-              this.criterios = r.filter(c => c.esDefinitivo)
+              this.criterios = r
             })
         },
         volver () {
           this.$parent.encuesta = null
+        },
+        capturarVoto (voto) {
+          api.guardarEncuesta(voto.idCriterio, voto.voto)
+            .then(r => {
+              if (r) {
+                alert('Votado con éxito')
+              } else {
+                alert('Error al guardar el voto')
+              }
+            })
         }
       }
     }
