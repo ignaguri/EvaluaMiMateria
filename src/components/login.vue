@@ -33,8 +33,8 @@
       name: 'Login',
       data () {
         return {
-          legajo: 0,
-          pass: 'admin',
+          legajo: null,
+          pass: null,
           error: false,
           errorText: 'Usuario no encontrado'
         }
