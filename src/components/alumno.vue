@@ -16,7 +16,7 @@
       </div>
     </nav>
     <div class="container-fluid">
-      <component :is="current"></component>
+      <component :is="current" :id="id"></component>
     </div>
   </div>
 </template>
@@ -25,6 +25,7 @@
   import api from '../api'
   import listaEncuestas from './alumnos/ListaEncuestas'
   import matriculacion from './alumnos/Matriculacion'
+  import profile from './utils/profile'
 
   export default {
     props: [
@@ -32,7 +33,8 @@
     ],
     components: {
       listaEncuestas,
-      matriculacion
+      matriculacion,
+      profile
     },
     beforeRouteEnter (to, from, next) {
       next(vm => {
@@ -51,7 +53,7 @@
     },
     methods: {
       verPerfil () {
-        console.log('ver perfil')
+        this.current = 'profile'
       },
       verEncuestas () {
         this.current = 'listaEncuestas'

@@ -58,7 +58,7 @@
           legajo: '',
           pass: '',
           pass2: '',
-          roles: [{id: 1, nombre: 'Alumno'}, {id: 2, nombre: 'Profesor'}],
+          roles: [{id: 2, nombre: 'Alumno'}, {id: 3, nombre: 'Profesor'}],
           nombre: '',
           apellido: '',
           mail: '',

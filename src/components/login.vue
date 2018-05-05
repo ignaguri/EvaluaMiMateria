@@ -46,6 +46,7 @@
             pass: this.pass
           }
           const app = this
+          // TODO: refactor this so 'r' is not that blackboxed
           api.login(data)
             .then(r => {
               if (!r[0]) {

@@ -2,28 +2,8 @@
     <div>
         <a class="btn btn-sm btn-outline-dark" role="button" href="#" @click.prevent="volver">Volver</a>
       <hr>
-    <!--<div class="card border-dark mb-3" style="width: auto">-->
-        <!--<div class="card-header">Encuesta de: <strong>{{creador}}</strong></div>-->
-        <!--<div class="card-body text-dark">-->
-            <!--<h5 class="card-title"><u>"{{nombre}}"</u></h5>-->
-            <!--<p class="card-text">Materia: <strong>{{materia}}</strong></p>-->
-            <!--<p class="card-text">Curso: <strong>{{curso}}</strong></p>-->
-            <!--<p class="card-text">Etapa actual: <strong>{{etapa}}</strong></p>-->
-            <!--<p class="card-text" v-if="finEtapa">Fecha de fin de la etapa: <strong>{{finEtapa}}</strong></p>-->
-            <!--<p class="card-text">Cantidad máx. de criterios: <strong>{{cantMaxCriterios}}</strong></p>-->
-            <!--<p class="card-text">Cantidad máx. de votos por persona: <strong>{{cantMaxVotosPorPersona}}</strong></p>-->
-            <!--<p class="card-text">Fecha de creación: <strong>{{creacion}}</strong></p>-->
-            <!--<p class="card-text">Código: <strong>{{codigo}}</strong></p>-->
-        <!--</div>-->
-    <!--</div>-->
-        <div class="container-fluid">
+        <!--<div class="container">-->
           <component :is="current" :idEncuesta="id" :encuesta="encuesta" @volver="volver"></component>
-        </div>
-        <!--<div class="col">-->
-          <!--<component v-if="etapa == 'Votacion Criterios'" v-bind:is="votacion"></component>-->
-          <!--<span class="alert-heading" v-if="etapa == 'Priorizacion'"><priorizacion></priorizacion></span>-->
-          <!--<span class="alert-heading" v-if="etapa == 'Habilitada'"><habilitada></habilitada></span>-->
-          <!--<span class="alert-heading" v-if="etapa == 'Cerrada'"><cerrada></cerrada></span>-->
         <!--</div>-->
     </div>
 </template>

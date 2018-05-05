@@ -1,7 +1,7 @@
 <template>
   <div>
     <a class="btn btn-sm btn-outline-dark" role="button" href="#" @click.prevent="volver">Volver</a>
-    <div v-if="!habilitacion">
+    <div v-if="current === 'resumen'">
       <div class="card border-dark mb-3" style="width: auto">
         <div class="card-header">Encuesta de: <strong>{{creador}}</strong></div>
         <div class="card-body text-dark">
@@ -79,119 +79,153 @@
         </div>
       </div>
     </div>
-    <div v-else>
+    <div v-else-if="current === 'habilitacion'">
       <habilitacion :encuesta="id" :fecha="modalEtapa.fechaFin"></habilitacion>
+    </div>
+    <div v-else-if="current === 'resultados'">
+      <h4>Históricos</h4>
+      <column-chart
+              :data="chartData"
+              :discrete="true"
+              ytitle="Cantidad de votos"
+              xtitle="Puntaje"
+              :messages="{empty: 'No se encontraron datos'}"
+              :download="true"
+      >
+      </column-chart>
     </div>
   </div>
 </template>
 <script>
 /* eslint-disable indent */
-import api from '../../api'
-import habilitacion from './habilitacion'
+  import api from '../../api'
+  import habilitacion from './habilitacion'
 
-    export default {
-      props: [
-        'id'
-      ],
-      components: {
-        habilitacion
+  export default {
+    props: [
+      'id'
+    ],
+    components: {
+      habilitacion
+    },
+    watch: {
+      current: function () {
+        if (this.current === 'resultados') this.cargarResultados()
+      }
+    },
+    data () {
+      return {
+        encuesta: null,
+        nombre: null,
+        curso: null,
+        materia: null,
+        creador: null,
+        etapa: null,
+        creacion: null,
+        finEtapa: null,
+        cantMaxCriterios: null,
+        cantMaxVotosPorPersona: null,
+        codigo: null,
+        modalEtapa: {
+          title: null,
+          proxEtapa: null,
+          fechaFin: null
+        },
+        modalCodigo: {
+          title: 'Generar código de encuesta',
+          codigo: null
+        },
+        current: 'resumen',
+        chartData: []
+      }
+    },
+    mounted () {
+      this.cargarEncuesta()
+    },
+    methods: {
+      cargarEncuesta () {
+        api.getEncuestaFull(this.id)
+          .then(r => {
+            this.encuesta = r
+            this.nombre = r.nombre
+            this.curso = r.curso
+            this.materia = r.materia
+            this.creador = r.creador
+            this.etapa = r.etapaActual
+            this.creacion = r.fechaCreacion
+            this.finEtapa = r.fechaFinEtapaActual
+            this.cantMaxCriterios = r.cantMaxCriterios
+            this.cantMaxVotosPorPersona = r.cantMaxVotosPorPersona
+            this.codigo = r.codigo === null ? 'No generado' : r.codigo
+          })
       },
-      data () {
-        return {
-          encuesta: null,
-          nombre: null,
-          curso: null,
-          materia: null,
-          creador: null,
-          etapa: null,
-          creacion: null,
-          finEtapa: null,
-          cantMaxCriterios: null,
-          cantMaxVotosPorPersona: null,
-          codigo: null,
-          modalEtapa: {
-            title: null,
-            proxEtapa: null,
-            fechaFin: null
-          },
-          modalCodigo: {
-            title: 'Generar código de encuesta',
-            codigo: null
-          },
-          habilitacion: false
+      volver () {
+        this.$parent.encuesta = null
+      },
+      cambiarEtapa () {
+        // Creación -> Votación criterios -> Priorización -> Habilitada -> Cerrada
+        this.modalEtapa.title = 'Cambiar de etapa'
+        switch (this.etapa) {
+          case 'Creada':
+            this.modalEtapa.proxEtapa = 'Votación de criterios'
+            break
+          case 'Votacion Criterios':
+            this.modalEtapa.proxEtapa = 'Priorización'
+            break
+          case 'Priorizacion':
+            this.modalEtapa.proxEtapa = 'Habilitada'
+            break
+          case 'Habilitada':
+            this.modalEtapa.proxEtapa = 'Cerrada'
+            break
         }
       },
-      mounted () {
-        this.cargarEncuesta()
-      },
-      methods: {
-        cargarEncuesta () {
-          api.getEncuestaFull(this.id)
-            .then(r => {
-              this.encuesta = r
-              this.nombre = r.nombre
-              this.curso = r.curso
-              this.materia = r.materia
-              this.creador = r.creador
-              this.etapa = r.etapaActual
-              this.creacion = r.fechaCreacion
-              this.finEtapa = r.fechaFinEtapaActual
-              this.cantMaxCriterios = r.cantMaxCriterios
-              this.cantMaxVotosPorPersona = r.cantMaxVotosPorPersona
-              this.codigo = r.codigo === null ? 'No generado' : r.codigo
-            })
-        },
-        volver () {
-          this.$parent.encuesta = null
-        },
-        cambiarEtapa () {
-          // Creación -> Votación criterios -> Priorización -> Habilitada -> Cerrada
-          this.modalEtapa.title = 'Cambiar de etapa'
-          switch (this.etapa) {
-            case 'Creada':
-              this.modalEtapa.proxEtapa = 'Votación de criterios'
-                  break
-            case 'Votacion Criterios':
-              this.modalEtapa.proxEtapa = 'Priorización'
-              break
-            case 'Priorizacion':
-              this.modalEtapa.proxEtapa = 'Habilitada'
-              break
-            case 'Habilitada':
-              this.modalEtapa.proxEtapa = 'Cerrada'
-              break
-          }
-        },
-        guardarCambioEtapa () {
-          if (this.modalEtapa.fechaFin === null) {
-            alert('Debe completar la fecha')
-            return
-          }
-          if (this.modalEtapa.proxEtapa === 'Habilitada') {
-            this.habilitacion = true
-            return
-          }
-          api.cambiarEtapa(this.id, this.modalEtapa.proxEtapa, this.modalEtapa.fechaFin)
-            .then(r => {
-              if (r) {
-                alert('Etapa cambiada correctamente')
-                this.volver()
-              } else {
-                alert('Error al cambiar la etapa')
-              }
-            })
-        },
-        estadisticas () {
-          console.log('implementar')
-        },
-        generarCodigo () {
-          api.generarCodigo(this.id, this.modalCodigo.codigo)
-            .then(r => {
-              if (r) {
-                this.codigo = r
-              }
-            })
+      guardarCambioEtapa () {
+        if (this.modalEtapa.fechaFin === null) {
+          alert('Debe completar la fecha')
+          return
         }
+        if (this.modalEtapa.proxEtapa === 'Habilitada') {
+          this.current = 'habilitacion'
+          return
+        }
+        api.cambiarEtapa(this.id, this.modalEtapa.proxEtapa, this.modalEtapa.fechaFin)
+          .then(r => {
+            if (r) {
+              alert('Etapa cambiada correctamente')
+              this.volver()
+            } else {
+              alert('Error al cambiar la etapa')
+            }
+          })
+      },
+      estadisticas () {
+        this.current = 'resultados'
+      },
+      cargarResultados () {
+        api.getCriteriosDefinitivosConVotos(this.id)
+          .then(r => {
+            this.chartData = []
+            r.forEach(c => {
+              this.chartData.push({
+                name: c.criterio,
+                data: c.votos
+              })
+            })
+          })
+      },
+      generarCodigo () {
+        if (this.modalCodigo.codigo === null) {
+          alert('Debe escribir un código')
+          return
+        }
+        api.generarCodigo(this.id, this.modalCodigo.codigo)
+          .then(r => {
+            if (r) {
+              this.codigo = r
+            }
+          })
       }
     }
+  }
 </script>

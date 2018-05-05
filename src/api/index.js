@@ -1,6 +1,5 @@
 import axios from 'axios'
 // import php_transform from './php_crud_api_transform'
-
 const URL = process.env.API_URL
 // TODO: transformar todos los metodos que no usan ?transform=1
 export default {
@@ -18,21 +17,21 @@ export default {
     return Number(sessionStorage.getItem('rol')) === rol
   },
   login (data) {
-    return axios.get(URL + 'usuarios' + '?filter=legajo,eq,' + data.legajo)
+    return axios.get(URL + 'usuarios' + '?filter=legajo,eq,' + data.legajo + '&transform=1')
       .then(function (response) {
-        // console.log(response.data)
-        if (response.data.usuarios.records.length <= 0) {
+        if (response.data.usuarios.length <= 0) {
           console.error('Usuario no encontrado')
           return [false, 'Usuario no encontrado']
         }
-        if (response.data.usuarios.records[0][5] !== data.pass) {
+        const user = response.data.usuarios[0]
+        if (user.password !== data.pass) {
           console.error('Contraseña incorrecta')
           return [false, 'Contraseña incorrecta']
         }
-        sessionStorage.setItem('userId', response.data.usuarios.records[0][0])
-        sessionStorage.setItem('nombre', response.data.usuarios.records[0][3])
-        sessionStorage.setItem('rol', response.data.usuarios.records[0][6])
-        return [true, response.data.usuarios.records[0][0], response.data.usuarios.records[0][6]]
+        sessionStorage.setItem('userId', user.idUsuarios)
+        sessionStorage.setItem('nombre', user.nombre)
+        sessionStorage.setItem('rol', user.idRol)
+        return [true, user.idUsuarios, user.idRol]
       })
       .catch(function (error) {
         console.log(error)
@@ -116,6 +115,16 @@ export default {
     return axios.post(URL + 'usuarios', user)
       .then(function (response) {
         if (response.data) return true
+      })
+      .catch(function (error) {
+        console.log(error)
+        return false
+      })
+  },
+  editarPerfil (user) {
+    return axios.put(URL + 'usuarios/' + user.id, user)
+      .then(r => {
+        return r.data
       })
       .catch(function (error) {
         console.log(error)
@@ -464,6 +473,71 @@ export default {
         return false
       })
   },
+  getCriteriosDefinitivosConVotos (encuesta) {
+    if (!this.checkLogin()) return Promise.reject(new Error('Not logged in'))
+    let criterios
+    return axios.get(URL + 'criteriosxencuesta' + '?filter=idEncuesta,eq,' + encuesta + '&transform=1')
+      .then(function (response) {
+        return response.data.criteriosxencuesta
+      })
+      .then(data => {
+        return data.filter(c => c.esDefinitivo)
+      })
+      .then(crit => {
+        criterios = crit
+        let promesas = []
+        crit.forEach(c => {
+          promesas.push(this.getRespuestasHistoricas(c.idCriteriosXEncuesta))
+        })
+        return Promise.all(promesas)
+      })
+      .then(ccv => {
+        criterios.forEach(c => {
+          let aux = ccv.filter(voto => {
+            if (voto !== null) {
+              return voto[0].idCriterioXEncuesta === c.idCriteriosXEncuesta
+            }
+          })
+          c.votos = aux[0]
+        })
+        return criterios
+      })
+      .then(ccvParsed => {
+        let populated = []
+        ccvParsed.forEach(c => {
+          // let votos = {}
+          // c.votos.forEach(voto => {
+          //   const rta = voto.respuesta // String(voto.respuesta)
+          //   if (votos[rta]) {
+          //     votos[rta] += 1
+          //   } else {
+          //     votos[rta] = 1
+          //   }
+          // })
+          let votos = {
+            '1 p': 0,
+            '2 p': 0,
+            '3 p': 0,
+            '4 p': 0,
+            '5 p': 0
+          }
+          c.votos.forEach(voto => {
+            const rta = voto.respuesta + ' p'
+            votos[rta] += 1
+          })
+          populated.push({
+            idCriterio: c.idCriteriosXEncuesta,
+            criterio: c.criterio,
+            votos: votos
+          })
+        })
+        return populated
+      })
+      .catch(function (error) {
+        console.log(error)
+        return false
+      })
+  },
   getCriteriosDefinitivosConVotosXSemana (encuesta) {
     if (!this.checkLogin()) return Promise.reject(new Error('Not logged in'))
     const week = this.getWeekNumber(new Date())
@@ -486,7 +560,9 @@ export default {
       .then(ccv => {
         criterios.forEach(c => {
           let aux = ccv.filter(voto => {
-            return voto[0].idCriterioXEncuesta === c.idCriteriosXEncuesta
+            if (voto !== null) {
+              return voto[0].idCriterioXEncuesta === c.idCriteriosXEncuesta
+            }
           })
           c.votos = aux[0]
         })
@@ -647,10 +723,10 @@ export default {
         return borrados
       })
       .catch(err => {
-        console.log(err)
         if (err.message === 'cool') {
           return true
         } else {
+          console.log(err)
           return false
         }
       })
@@ -682,7 +758,7 @@ export default {
     }
     return this.getRespuestasXSemana(criterio, semana)
       .then(r => {
-        if (r.length > 0) {
+        if (r && r.length > 0) {
           return r.filter(v => v.idUsuario === userId)[0]
         } else {
           return null
@@ -712,7 +788,29 @@ export default {
       semana +
       '&satisfy=all&transform=1')
       .then(r => {
-        return r.data.respuestasxcriterio
+        if (r.data.respuestasxcriterio.length > 0) {
+          return r.data.respuestasxcriterio
+        } else {
+          return null
+        }
+      })
+      .catch(function (error) {
+        console.log(error)
+        return false
+      })
+  },
+  getRespuestasHistoricas (criterio) {
+    if (!this.checkLogin()) return Promise.reject(new Error('Not logged in'))
+    return axios.get(URL + 'respuestasxcriterio' +
+      '?filter[]=idCriterioXEncuesta,eq,' +
+      criterio +
+      '&satisfy=all&transform=1')
+      .then(r => {
+        if (r.data.respuestasxcriterio.length > 0) {
+          return r.data.respuestasxcriterio
+        } else {
+          return null
+        }
       })
       .catch(function (error) {
         console.log(error)

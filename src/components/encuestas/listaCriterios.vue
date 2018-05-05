@@ -1,6 +1,6 @@
 <template>
     <div>
-        <criterio-view v-for="c in criterios" :criterio="c" :canVotar="canVotar" :key="c.idCriterioXEncuesta" @voto="capturarVoto" @borrar="capturarBorrar"></criterio-view>
+        <criterio-view v-for="c in criterios" :criterio="c" :canVotar="canVotar" :key="c.idCriterioXEncuesta" @voto="capturarVoto" :canBorrar="true" @borrar="capturarBorrar"></criterio-view>
     </div>
 </template>
 <script>

@@ -76,11 +76,13 @@ import enojado from '../../assets/enojado.png'
       this.$emit('voto', {idCriterio: this.criterio.idCriteriosXEncuesta, voto: this.voto})
     },
     checkVotado () {
-      const userId = Number(api.checkLogin())
-      let votos = this.criterio.votos.filter(v => v.idUsuario === userId)
-      const respuesta = votos.length > 0 ? votos[0].respuesta : null
-      if (respuesta) {
-        this.$refs['lbl' + respuesta].className += ' focus active'
+      if (this.criterio.votos) {
+        const userId = Number(api.checkLogin())
+        let votos = this.criterio.votos.filter(v => v.idUsuario === userId)
+        const respuesta = votos.length > 0 ? votos[0].respuesta : null
+        if (respuesta) {
+          this.$refs['lbl' + respuesta].className += ' focus active'
+        }
       }
     }
   }

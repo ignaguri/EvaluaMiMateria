@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import HelloWorld from '@/components/HelloWorld'
+import landing from '@/components/landing'
 import login from '@/components/login'
 import admin from '@/components/admin'
 import registrar from '@/components/registrar'
@@ -13,8 +13,8 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'HelloWorld',
-      component: HelloWorld
+      name: 'Landing',
+      component: landing
     },
     {
       path: '/login',

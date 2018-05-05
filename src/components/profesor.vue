@@ -16,7 +16,7 @@
                 </div>
             </nav>
         <div class="container-fluid">
-            <component :is="current"></component>
+            <component :is="current" :id="id"></component>
         </div>
     </div>
 </template>
@@ -25,6 +25,7 @@
 import api from '../api'
 import crearEncuesta from './profesores/CrearEncuesta.vue'
 import listaEncuestas from './profesores/ListaEncuestas.vue'
+import profile from './utils/profile'
 
     export default {
       props: [
@@ -32,7 +33,8 @@ import listaEncuestas from './profesores/ListaEncuestas.vue'
       ],
       components: {
         crearEncuesta,
-        listaEncuestas
+        listaEncuestas,
+        profile
       },
       beforeRouteEnter (to, from, next) {
         next(vm => {
@@ -51,7 +53,7 @@ import listaEncuestas from './profesores/ListaEncuestas.vue'
       },
       methods: {
         verPerfil () {
-          console.log('ver perfil')
+          this.current = 'profile'
         },
         verEncuestas () {
           this.current = 'listaEncuestas'
