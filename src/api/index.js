@@ -35,7 +35,7 @@ export default {
       })
       .catch(function (error) {
         console.log(error)
-        return [false, error]
+        return [false, error.response.status + ' ' + error.response.statusText]
       })
   },
   logout (ctx) {
