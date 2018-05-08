@@ -223,6 +223,9 @@
           .then(r => {
             if (r) {
               this.codigo = r
+              alert('Código generado con éxito!')
+            } else {
+              alert('Error al generar el código')
             }
           })
       }
