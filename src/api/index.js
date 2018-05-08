@@ -1,4 +1,5 @@
 import axios from 'axios'
+axios.defaults.withCredentials = true
 // import php_transform from './php_crud_api_transform'
 const URL = process.env.API_URL
 // TODO: transformar todos los metodos que no usan ?transform=1
