@@ -30,7 +30,7 @@
     <div class="row">
       <div class="col-12">
         <div class="text-center">
-          <lista-criterios ref="lista" :encuesta="idEncuesta" :canVotar="canVotar" @criterios="capturarCriterios" @voto="capturarVoto"></lista-criterios>
+          <lista-criterios ref="lista" :encuesta="idEncuesta" :canVotar="canVotar" :canBorrar="false" @criterios="capturarCriterios" @voto="capturarVoto"></lista-criterios>
         </div>
       </div>
     </div>

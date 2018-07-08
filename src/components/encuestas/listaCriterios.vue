@@ -1,6 +1,6 @@
 <template>
     <div>
-        <criterio-view v-for="c in criterios" :criterio="c" :canVotar="canVotar" :key="c.idCriterioXEncuesta" @voto="capturarVoto" :canBorrar="true" @borrar="capturarBorrar"></criterio-view>
+        <criterio-view v-for="c in criterios" :criterio="c" :canVotar="canVotar" :key="c.idCriterioXEncuesta" @voto="capturarVoto" :canBorrar="canBorrar" @borrar="capturarBorrar"></criterio-view>
     </div>
 </template>
 <script>
@@ -8,11 +8,13 @@
 import api from '../../api'
 import criterioView from './criterio'
     export default {
-      props: [
-        'encuesta',
-        'canVotar',
-        'canBorrar'
-      ],
+      props: {
+        encuesta: [String, Number],
+        canVotar: Boolean,
+        canBorrar: {
+          default: true
+        }
+      },
       components: {
         criterioView
       },

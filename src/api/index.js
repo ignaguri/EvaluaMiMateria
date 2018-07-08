@@ -516,11 +516,11 @@ export default {
           //   }
           // })
           let votos = {
-            '1 p': 0,
-            '2 p': 0,
-            '3 p': 0,
+            '5 p': 0,
             '4 p': 0,
-            '5 p': 0
+            '3 p': 0,
+            '2 p': 0,
+            '1 p': 0
           }
           c.votos.forEach(voto => {
             const rta = voto.respuesta + ' p'

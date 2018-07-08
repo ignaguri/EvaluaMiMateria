@@ -13,15 +13,16 @@
         </div>
         <div v-if="vista === 'resultados'">
             <h4>Históricos</h4>
-            <column-chart
+            <bar-chart
                     :data="chartData"
                     :discrete="true"
-                    ytitle="Cantidad de votos"
-                    xtitle="Puntaje"
+                    xtitle="Cantidad de votos"
+                    ytitle="Puntaje"
                     :messages="{empty: 'No se encontraron datos'}"
                     :download="true"
+                    :library="chartOptions"
             >
-            </column-chart>
+            </bar-chart>
         </div>
     </div>
 </template>
@@ -46,7 +47,18 @@ import criterioView from './criterioFinal'
         return {
           criterios: null,
           vista: null,
-          chartData: [] // [{name: 'Workout', data: {'2017-01-01 00:00:00 -0800': 3, '2017-01-02 00:00:00 -0800': 4}}, {name: 'Call parents', data: {'2017-01-01 00:00:00 -0800': 5, '2017-01-02 00:00:00 -0800': 3}}]
+          chartData: [], // [{name: 'Workout', data: {'2017-01-01 00:00:00 -0800': 3, '2017-01-02 00:00:00 -0800': 4}}, {name: 'Call parents', data: {'2017-01-01 00:00:00 -0800': 5, '2017-01-02 00:00:00 -0800': 3}}]
+          chartOptions: {
+            scales: {
+              xAxes: [{
+                ticks: {
+                  beginAtZero: true,
+                  stepSize: 1,
+                  maxTicksLimit: 5
+                }
+              }]
+            }
+          }
         }
       },
       watch: {

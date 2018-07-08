@@ -5,7 +5,7 @@
       <div class="card border-dark mb-3" style="width: auto">
         <div class="card-header">Encuesta de: <strong>{{creador}}</strong></div>
         <div class="card-body text-dark">
-          <h5 class="card-title"><u>"{{nombre}}"</u></h5>
+          <h4 class="card-title"><u>{{nombre}}</u></h4>
           <p class="card-text">Materia: <strong>{{materia}}</strong></p>
           <p class="card-text">Curso: <strong>{{curso}}</strong></p>
           <p class="card-text">Etapa actual: <strong>{{etapa}}</strong></p>
@@ -84,15 +84,16 @@
     </div>
     <div v-else-if="current === 'resultados'">
       <h4>Históricos</h4>
-      <column-chart
+      <bar-chart
               :data="chartData"
               :discrete="true"
-              ytitle="Cantidad de votos"
-              xtitle="Puntaje"
+              xtitle="Cantidad de votos"
+              ytitle="Puntaje"
               :messages="{empty: 'No se encontraron datos'}"
               :download="true"
+              :library="chartOptions"
       >
-      </column-chart>
+      </bar-chart>
     </div>
   </div>
 </template>
@@ -136,7 +137,18 @@
           codigo: null
         },
         current: 'resumen',
-        chartData: []
+        chartData: [],
+        chartOptions: {
+          scales: {
+            xAxes: [{
+              ticks: {
+                beginAtZero: true,
+                stepSize: 1,
+                maxTicksLimit: 5
+              }
+            }]
+          }
+        }
       }
     },
     mounted () {
@@ -160,7 +172,11 @@
           })
       },
       volver () {
-        this.$parent.encuesta = null
+        if (this.current === 'resultados') {
+          this.current = 'resumen'
+        } else {
+          this.$parent.encuesta = null
+        }
       },
       cambiarEtapa () {
         // Creación -> Votación criterios -> Priorización -> Habilitada -> Cerrada

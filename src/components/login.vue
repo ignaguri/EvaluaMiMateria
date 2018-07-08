@@ -6,7 +6,7 @@
                 <div class="form-row">
                     <div class="form-group col-6">
                         <label for="inputEmail">Legajo</label>
-                        <input type="text" class="form-control" id="inputEmail" placeholder="Legajo" v-model="legajo">
+                        <input type="text" class="form-control" id="inputEmail" placeholder="Legajo" v-model="legajo" v-focus>
                     </div>
                     <div class="form-group col-6">
                         <label for="inputPassword">Password</label>
@@ -66,41 +66,16 @@
                 }
               }
             })
-            /*          fetch('http://localhost/encuestaVueWebpack/api.php',
-             {
-             headers: {
-             'Accept': 'application/json',
-             'Content-Type': 'application/json'
-             },
-             method: 'POST',
-             body: JSON.stringify(obj)
-             })
-             .then(json)
-             .then(function (data) {
-             console.log('Request succeeded with JSON response', data)
-             sessionStorage.setItem('csrf_token', data)
-             })
-             .catch(function (error) {
-             console.log('Request failed', error)
-             }) */
+        }
+      },
+      directives: {
+        focus: {
+          inserted: function (el) {
+            el.focus()
+          }
         }
       }
     }
-    /*
-     function status (response) {
-     if (response.status >= 200 && response.status < 300) {
-     return Promise.resolve(response)
-     } else {
-     return Promise.reject(new Error(response.statusText))
-     }
-     }
-     */
-
-    /*
-     function json (response) {
-     return response.json()
-     }
-     */
 </script>
 <style>
 </style>
