@@ -635,15 +635,19 @@ export default {
             idEtapaActual: this.etapaAId(etapa)
           })
         })
-        return axios.post(URL + 'votosxcriterio', body)
-          .then(r => {
-            return true
-          })
-          .catch(error => {
-            console.log(error)
-            return false
-          })
-        // FIN NUEVO VOTO
+        if (body.length) {
+          return axios.post(URL + 'votosxcriterio', body)
+          // FIN NUEVO VOTO
+        } else {
+          return true
+        }
+      })
+      .then(r => {
+        return true
+      })
+      .catch(error => {
+        console.log(error)
+        return false
       })
   },
   guardarPriorizacion (criterios, etapa, encuesta) {
@@ -663,15 +667,19 @@ export default {
             idEtapaActual: this.etapaAId(etapa)
           })
         })
-        return axios.post(URL + 'votosxcriterio', body)
-          .then(r => {
-            return true
-          })
-          .catch(error => {
-            console.log(error)
-            return false
-          })
-        // FIN NUEVO VOTO
+        if (body.length) {
+          return axios.post(URL + 'votosxcriterio', body)
+          // FIN NUEVO VOTO
+        } else {
+          return true
+        }
+      })
+      .then(r => {
+        return true
+      })
+      .catch(error => {
+        console.log(error)
+        return false
       })
   },
   getVotosCriterio (criterio, encuesta) {
