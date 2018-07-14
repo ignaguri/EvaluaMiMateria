@@ -93,11 +93,7 @@ import listaCriterios from './listaCriterios'
         this.cantVotos = e.length
         let porcentaje = (this.cantVotos / this.cantMaxVotos) * 100
         this.barraVotosWidth = 'width:' + porcentaje + '%'
-        if (this.cantVotos >= this.cantMaxVotos) {
-          this.canVotar = false
-        } else {
-          this.canVotar = true
-        }
+        this.canVotar = this.cantVotos < this.cantMaxVotos
       },
       capturarCriterios (e) {
         this.cantCriterios = e

@@ -4,25 +4,19 @@
       <div class="col">
         <div class="text-center">
           <h4>Priorización de criterios</h4>
-          <p><small>Explicación sobre que debe priorizar y bla bla</small></p>
+          <p>Elegir un orden de prioridad de los criterios del <strong>1</strong> (prioridad baja) al <strong>3</strong> (prioridad alta)</p>
         </div>
         <div class="form-group row">
-          <div class="col-5">
-            <div class="progress" style="height: 31px;">
-              <div class="progress-bar bg-warning" id="cantCriterios" role="progressbar" :style="barraCriteriosWidth" style="font-size: 1rem">
-                {{cantCriterios}}/{{cantMaxCriterios}} Criterios
-              </div>
-            </div>
-          </div>
-          <div class="col-2">
-            <button type="button" class="btn btn-sm btn-success" @click="guardar">Guardar</button>
-          </div>
-          <div class="col-5">
+          <div class="col-2"></div>
+          <div class="col-6">
             <div class="progress" style="height: 31px;">
               <div class="progress-bar bg-info" id="cantVotos" role="progressbar" :style="barraVotosWidth" style="font-size: 1rem">
                 {{cantVotos}}/{{cantMaxVotos}} Votos
               </div>
             </div>
+          </div>
+          <div class="col-2">
+            <button type="button" class="btn btn-sm btn-block btn-success" @click="guardar">Guardar</button>
           </div>
         </div>
       </div>
@@ -30,7 +24,10 @@
     <div class="row">
       <div class="col-12">
         <div class="text-center">
-          <lista-criterios ref="lista" :encuesta="idEncuesta" :canVotar="canVotar" :canBorrar="false" @criterios="capturarCriterios" @voto="capturarVoto"></lista-criterios>
+          <lista-criterios :encuesta="idEncuesta"
+                           :canVotar="canVotar" :canBorrar="false"
+                           @priorizar="capturarPriorizar" isPriorizacion>
+          </lista-criterios>
         </div>
       </div>
     </div>
@@ -50,8 +47,6 @@
     },
     data () {
       return {
-        // criterio: null,
-        cantCriterios: null,
         cantMaxCriterios: this.encuesta.cantMaxCriterios,
         cantVotos: null,
         cantMaxVotos: this.encuesta.cantMaxVotosPorPersona,
@@ -64,41 +59,15 @@
     mounted () {
     },
     methods: {
-/*      agregar () {
-        if (this.cantCriterios === this.cantMaxCriterios) {
-          alert('Cantidad máxima de criterios alcanzada')
-          return
-        }
-        api.postCriteriosXEncuesta(this.criterio, this.idEncuesta)
-          .then(r => {
-            if (r) {
-              alert('Exito')
-              this.criterio = null
-              this.$refs.lista.cargarCriterios()
-            } else {
-              alert('Error')
-            }
-          })
-      },
-      */
-      capturarVoto (e) {
+      capturarPriorizar (e) {
         this.criteriosVotados = e
         this.cantVotos = e.length
         let porcentaje = (this.cantVotos / this.cantMaxVotos) * 100
         this.barraVotosWidth = 'width:' + porcentaje + '%'
-        if (this.cantVotos >= this.cantMaxVotos) {
-          this.canVotar = false
-        } else {
-          this.canVotar = true
-        }
-      },
-      capturarCriterios (e) {
-        this.cantCriterios = e
-        let porcentaje = (this.cantCriterios / this.cantMaxCriterios) * 100
-        this.barraCriteriosWidth = 'width:' + porcentaje + '%'
+        this.canVotar = this.cantVotos < this.cantMaxVotos
       },
       guardar () {
-        api.guardarVotacion(this.criteriosVotados, this.encuesta.etapaActual, this.idEncuesta)
+        api.guardarPriorizacion(this.criteriosVotados, this.encuesta.etapaActual, this.idEncuesta)
           .then(r => {
             if (r) {
               alert('Guardado con éxito!')
