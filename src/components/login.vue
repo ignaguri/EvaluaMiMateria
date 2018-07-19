@@ -6,11 +6,11 @@
                 <div class="form-row">
                     <div class="form-group col-6">
                         <label for="inputEmail">Legajo</label>
-                        <input type="text" class="form-control" id="inputEmail" placeholder="Legajo" v-model="legajo" v-focus>
+                        <input type="text" class="form-control" id="inputEmail" placeholder="Legajo" v-model="legajo" v-focus required>
                     </div>
                     <div class="form-group col-6">
-                        <label for="inputPassword">Password</label>
-                        <input type="password" class="form-control" id="inputPassword" placeholder="Contraseña" v-model="pass">
+                        <label for="inputPassword">Contraseña</label>
+                        <input type="password" class="form-control" id="inputPassword" placeholder="Contraseña" v-model="pass" required>
                     </div>
                 </div>
                 <button type="submit" class="btn btn-primary">Entrar</button>

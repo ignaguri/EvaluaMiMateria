@@ -46,6 +46,7 @@ import criterioPriorizacion from './criterioPriorizacion'
         cargarCriterios () {
           api.getCriteriosXEncuesta(this.encuesta)
             .then(r => {
+              // TODO: agregar ordenamiento por votos / priorizaciones
               this.criterios = r
               this.$emit('criterios', this.criterios.length)
             })

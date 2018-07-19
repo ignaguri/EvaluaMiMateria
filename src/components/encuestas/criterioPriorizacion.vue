@@ -6,20 +6,14 @@
       </div>
       <div class="col-1">
         <button type="button" :class="`btn btn-${styleBoton}`" @click="votar" ref="btnPriorizar">{{textoBoton}}</button>
-        <!--<input-->
-              <!--type="checkbox"-->
-              <!--:id="criterio.idCriterioXEncuesta"-->
-              <!--v-model="votado"-->
-              <!--autocomplete="off"-->
-              <!--ref="chkVotar"-->
-            <!--&gt;-->
+
       </div>
     </div>
     <div class="form-row align-items-center">
       <div class="col-1">
       </div>
       <div class="col-10">
-        <small class="form-text text-muted">Total votos: {{votos}} - Propuesto por: {{criterio.propuestoPor}}</small>
+        <small class="form-text text-muted">Total puntos priorización: {{votos}} - Propuesto por: {{criterio.propuestoPor}}</small>
       </div>
       <div class="col-1">
       </div>
@@ -87,7 +81,7 @@ import api from '../../api'
       api.getVotosCriterio(this.criterio.idCriteriosXEncuesta, this.criterio.idEncuesta)
         .then(r => {
           if (r.votosxcriterio) {
-            this.votos = r.votosxcriterio.length || 0
+            this.votos = r.votosxcriterio.reduce((acc, cur) => acc + cur.priorizacion, 0)
             const user = Number(api.checkLogin())
             r.votosxcriterio.forEach(v => {
               if (v.idUsuarioVotante === user) {

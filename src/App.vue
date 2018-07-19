@@ -6,7 +6,7 @@
     </nav>
     <!--<img src="./assets/logo.png" class="text-right">-->
       <!--<a @click.prevent="logout" href="">Salir</a>-->
-    <router-view/>
+    <router-view></router-view>
   </div>
 </template>
 

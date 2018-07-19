@@ -38,8 +38,11 @@ import criterioView from './criterio'
         cargarCriterios () {
           api.getCriteriosXEncuestaConVotos(this.encuesta)
             .then(r => {
+              r.forEach(data => {
+                data.priorizaciones = data.votos.reduce((acc, cur) => acc + cur.priorizacion, 0)
+              })
               r.sort((a, b) => {
-                return a.votos.length < b.votos.length
+                return a.priorizaciones < b.priorizaciones
               })
               this.criterios = r
             })

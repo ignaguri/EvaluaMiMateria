@@ -19,7 +19,7 @@ export default {
   },
   login (data) {
     return axios.get(URL + 'usuarios' + '?filter=legajo,eq,' + data.legajo + '&transform=1')
-      .then(function (response) {
+      .then(response => {
         if (response.data.usuarios.length <= 0) {
           console.error('Usuario no encontrado')
           return [false, 'Usuario no encontrado']
@@ -34,8 +34,8 @@ export default {
         sessionStorage.setItem('rol', user.idRol)
         return [true, user.idUsuarios, user.idRol]
       })
-      .catch(function (error) {
-        console.log(error)
+      .catch(error => {
+        console.error(error)
         return [false, error.response.status + ' ' + error.response.statusText]
       })
   },
@@ -693,7 +693,7 @@ export default {
           '&filter[]=idEtapaActual,eq,' + etapa +
           '&satisfy=all' + '&transform=1')
       })
-      .then(function (response) {
+      .then(response => {
         response.data.etapaActual = etapa
         response.data.criterio = criterio
         return response.data
