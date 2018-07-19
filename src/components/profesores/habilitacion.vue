@@ -5,6 +5,7 @@
         <br>
         <button type="button" class="btn btn-sm btn-success" @click="guardar">Guardar</button>
       </div>
+      <br>
       <criterio-view v-for="c in criterios" :criterio="c" :key="c.idCriterioXEncuesta"
                      @voto="capturarVoto"></criterio-view>
     </div>
