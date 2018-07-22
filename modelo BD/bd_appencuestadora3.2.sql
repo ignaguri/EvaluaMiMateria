@@ -33,7 +33,7 @@ CREATE TABLE `criteriosxencuesta` (
   KEY `fk_criterios_propuestopor_idx` (`propuestoPor`),
   CONSTRAINT `fk_criterios_encuesta` FOREIGN KEY (`idEncuesta`) REFERENCES `encuestas` (`idEncuestas`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_criterios_propuestopor` FOREIGN KEY (`propuestoPor`) REFERENCES `usuarios` (`idUsuarios`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -79,7 +79,7 @@ CREATE TABLE `encuestas` (
   CONSTRAINT `fk_encuesta_curso` FOREIGN KEY (`curso`) REFERENCES `curso` (`idCurso`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_encuesta_etapa` FOREIGN KEY (`etapaActual`) REFERENCES `etapas` (`idEtapas`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_encuesta_materia` FOREIGN KEY (`materia`) REFERENCES `materias` (`idMaterias`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -129,7 +129,7 @@ CREATE TABLE `respuestasxcriterio` (
   KEY `fk_respuestas_usuario_idx` (`idUsuario`),
   CONSTRAINT `fk_respuestas_criterio` FOREIGN KEY (`idCriterioXEncuesta`) REFERENCES `criteriosxencuesta` (`idCriteriosXEncuesta`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_respuestas_usuario` FOREIGN KEY (`idUsuario`) REFERENCES `usuarios` (`idUsuarios`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -165,7 +165,7 @@ CREATE TABLE `usuarios` (
   UNIQUE KEY `legajo_UNIQUE` (`legajo`),
   KEY `fk_usuario_rol_idx` (`idRol`),
   CONSTRAINT `fk_usuario_rol` FOREIGN KEY (`idRol`) REFERENCES `roles` (`idRoles`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -184,7 +184,7 @@ CREATE TABLE `usuariosxencuesta` (
   KEY `fk_userXEncuesta_usuario_idx` (`idUsuario`),
   CONSTRAINT `fk_userXEncuesta_encuesta` FOREIGN KEY (`idEncuesta`) REFERENCES `encuestas` (`idEncuestas`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_userXEncuesta_usuario` FOREIGN KEY (`idUsuario`) REFERENCES `usuarios` (`idUsuarios`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -199,6 +199,7 @@ CREATE TABLE `votosxcriterio` (
   `idCriterioXEncuesta` int(11) NOT NULL,
   `idUsuarioVotante` int(11) NOT NULL,
   `idEtapaActual` int(11) NOT NULL,
+  `priorizacion` int(11) DEFAULT NULL,
   PRIMARY KEY (`idVotosXCriterio`),
   KEY `fk_votos_criterio_idx` (`idCriterioXEncuesta`),
   KEY `fk_votos_usuario_idx` (`idUsuarioVotante`),
@@ -206,7 +207,7 @@ CREATE TABLE `votosxcriterio` (
   CONSTRAINT `fk_votos_criterio` FOREIGN KEY (`idCriterioXEncuesta`) REFERENCES `criteriosxencuesta` (`idCriteriosXEncuesta`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_votos_etapa` FOREIGN KEY (`idEtapaActual`) REFERENCES `etapas` (`idEtapas`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_votos_usuario` FOREIGN KEY (`idUsuarioVotante`) REFERENCES `usuarios` (`idUsuarios`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=94 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=127 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -218,4 +219,4 @@ CREATE TABLE `votosxcriterio` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-04-28 14:04:44
+-- Dump completed on 2018-07-22 19:49:38

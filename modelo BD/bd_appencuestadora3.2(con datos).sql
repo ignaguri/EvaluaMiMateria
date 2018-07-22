@@ -25,7 +25,7 @@ DROP TABLE IF EXISTS `criteriosxencuesta`;
 CREATE TABLE `criteriosxencuesta` (
   `idCriteriosXEncuesta` int(11) NOT NULL AUTO_INCREMENT,
   `idEncuesta` int(11) NOT NULL,
-  `pregunta` tinytext NOT NULL,
+  `criterio` tinytext NOT NULL,
   `propuestoPor` int(11) DEFAULT NULL,
   `esDefinitivo` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`idCriteriosXEncuesta`),
@@ -33,7 +33,7 @@ CREATE TABLE `criteriosxencuesta` (
   KEY `fk_criterios_propuestopor_idx` (`propuestoPor`),
   CONSTRAINT `fk_criterios_encuesta` FOREIGN KEY (`idEncuesta`) REFERENCES `encuestas` (`idEncuestas`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_criterios_propuestopor` FOREIGN KEY (`propuestoPor`) REFERENCES `usuarios` (`idUsuarios`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -42,6 +42,7 @@ CREATE TABLE `criteriosxencuesta` (
 
 LOCK TABLES `criteriosxencuesta` WRITE;
 /*!40000 ALTER TABLE `criteriosxencuesta` DISABLE KEYS */;
+INSERT INTO `criteriosxencuesta` VALUES (1,1,'Un criterio de prueba',2,1),(2,1,'Otro criterio para votar',2,1),(3,1,'otrrrrrrrrra',2,1),(4,1,'daaaaaaaaale',2,0),(5,2,'Dinámica de la clase',2,1),(8,2,'Relacion de los temas con la profesión',2,1),(9,2,'Material de estudio',2,1),(11,1,'holiiiiiiiiiiiiiiiiiiiiiis',2,0),(13,2,'El profesor explica muy bien las clases',2,0),(14,2,'Las clases son puro PowerPoint',4,0),(15,4,'Dinamica de la clase',2,1),(16,4,'Material de estudio',2,1),(17,4,'Puros powerpoint',2,1),(18,4,'Relacion de los temas con la profesión',2,1),(19,3,'El primer criterio de esta encuesta',2,0);
 /*!40000 ALTER TABLE `criteriosxencuesta` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -88,6 +89,7 @@ CREATE TABLE `encuestas` (
   `fechaFinEtapaActual` date DEFAULT NULL,
   `cantMaxCriterios` int(11) DEFAULT NULL,
   `cantMaxVotosPorPersona` int(11) DEFAULT NULL,
+  `codigo` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`idEncuestas`),
   KEY `fk_encuesta_creador_idx` (`creador`),
   KEY `fk_encuesta_curso_idx` (`curso`),
@@ -97,7 +99,7 @@ CREATE TABLE `encuestas` (
   CONSTRAINT `fk_encuesta_curso` FOREIGN KEY (`curso`) REFERENCES `curso` (`idCurso`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_encuesta_etapa` FOREIGN KEY (`etapaActual`) REFERENCES `etapas` (`idEtapas`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_encuesta_materia` FOREIGN KEY (`materia`) REFERENCES `materias` (`idMaterias`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -106,7 +108,7 @@ CREATE TABLE `encuestas` (
 
 LOCK TABLES `encuestas` WRITE;
 /*!40000 ALTER TABLE `encuestas` DISABLE KEYS */;
-INSERT INTO `encuestas` VALUES (1,3,2,3,1,'Probando','2018-03-03',NULL,12,2),(2,3,1,6,1,'Otra más','2018-03-03',NULL,23,21);
+INSERT INTO `encuestas` VALUES (1,3,2,3,4,'Probando','2018-03-03','2018-04-28',7,2,'Probando5k3'),(2,3,1,6,3,'Otra más','2018-03-03','2018-07-29',6,3,'OtraMasChicos'),(3,3,1,5,2,'IAr 5k1','2018-05-16','2018-07-29',7,3,'iar'),(4,5,1,1,4,'Demo','2018-05-16','2018-07-18',7,3,'codigo');
 /*!40000 ALTER TABLE `encuestas` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -121,7 +123,7 @@ CREATE TABLE `etapas` (
   `idEtapas` int(11) NOT NULL AUTO_INCREMENT,
   `nombre` varchar(45) NOT NULL,
   PRIMARY KEY (`idEtapas`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -130,7 +132,7 @@ CREATE TABLE `etapas` (
 
 LOCK TABLES `etapas` WRITE;
 /*!40000 ALTER TABLE `etapas` DISABLE KEYS */;
-INSERT INTO `etapas` VALUES (1,'Creada'),(2,'En proceso'),(3,'Finalizada');
+INSERT INTO `etapas` VALUES (1,'Creada'),(2,'Votacion Criterios'),(3,'Priorizacion'),(4,'Habilitada'),(5,'Cerrada');
 /*!40000 ALTER TABLE `etapas` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -145,7 +147,7 @@ CREATE TABLE `materias` (
   `idMaterias` int(11) NOT NULL AUTO_INCREMENT,
   `nombre` varchar(45) NOT NULL,
   PRIMARY KEY (`idMaterias`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -154,7 +156,7 @@ CREATE TABLE `materias` (
 
 LOCK TABLES `materias` WRITE;
 /*!40000 ALTER TABLE `materias` DISABLE KEYS */;
-INSERT INTO `materias` VALUES (1,'Creatividad'),(2,'Big Data'),(3,'ARE'),(4,'DSI'),(5,'Inteligencia Aritficial'),(6,'Investigación Operativa');
+INSERT INTO `materias` VALUES (1,'Creatividad'),(2,'Big Data'),(3,'ARE'),(4,'DSI'),(5,'Inteligencia Artificial'),(6,'Investigación Operativa');
 /*!40000 ALTER TABLE `materias` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -169,14 +171,15 @@ CREATE TABLE `respuestasxcriterio` (
   `idRespuestasXCriterio` int(11) NOT NULL AUTO_INCREMENT,
   `idCriterioXEncuesta` int(11) NOT NULL,
   `idUsuario` int(11) NOT NULL,
-  `fecha` date NOT NULL,
+  `fecha` date DEFAULT NULL,
   `respuesta` int(11) NOT NULL,
+  `semana` int(11) NOT NULL,
   PRIMARY KEY (`idRespuestasXCriterio`),
   KEY `fk_respuestas_criterio_idx` (`idCriterioXEncuesta`),
   KEY `fk_respuestas_usuario_idx` (`idUsuario`),
   CONSTRAINT `fk_respuestas_criterio` FOREIGN KEY (`idCriterioXEncuesta`) REFERENCES `criteriosxencuesta` (`idCriteriosXEncuesta`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_respuestas_usuario` FOREIGN KEY (`idUsuario`) REFERENCES `usuarios` (`idUsuarios`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -185,6 +188,7 @@ CREATE TABLE `respuestasxcriterio` (
 
 LOCK TABLES `respuestasxcriterio` WRITE;
 /*!40000 ALTER TABLE `respuestasxcriterio` DISABLE KEYS */;
+INSERT INTO `respuestasxcriterio` VALUES (1,1,2,'2018-04-28',5,17),(2,2,2,'2018-04-28',1,17),(4,3,3,'2018-04-28',5,17),(7,3,2,'2018-04-28',3,17),(8,1,2,'2018-05-05',3,18),(9,2,2,'2018-05-01',3,18),(10,3,2,'2018-05-01',1,18),(11,1,3,'2018-04-28',5,17),(12,2,3,'2018-04-28',2,17),(13,3,3,'2018-04-28',3,17),(14,1,2,'2018-05-16',4,20),(15,15,2,'2018-05-16',1,20),(16,16,2,'2018-05-16',1,20),(17,17,2,'2018-05-16',1,20),(18,18,2,'2018-05-16',1,20),(19,3,2,'2018-05-16',4,20),(20,2,2,'2018-05-16',3,20);
 /*!40000 ALTER TABLE `respuestasxcriterio` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -231,7 +235,7 @@ CREATE TABLE `usuarios` (
   UNIQUE KEY `legajo_UNIQUE` (`legajo`),
   KEY `fk_usuario_rol_idx` (`idRol`),
   CONSTRAINT `fk_usuario_rol` FOREIGN KEY (`idRol`) REFERENCES `roles` (`idRoles`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -240,7 +244,7 @@ CREATE TABLE `usuarios` (
 
 LOCK TABLES `usuarios` WRITE;
 /*!40000 ALTER TABLE `usuarios` DISABLE KEYS */;
-INSERT INTO `usuarios` VALUES (1,0,'admin','admin','admin','admin',1),(2,1,'alumno','Alumno','alumno','admin',2),(3,2,'profe','Profe','profe','admin',3);
+INSERT INTO `usuarios` VALUES (1,0,'admin','admin','admin','admin',1),(2,1,'Falso','UnAlumno','alumno@fake.com','admin',2),(3,2,'NoCuevas','Juan','juan@nosoycuevas.com','admin',3),(4,12345,'Perez','Juan','juan@perez.com','admin',2),(5,123,'Cuevas','Juan Carlos','1234@sistemas.frc.utn.edu.ar','123456',3),(6,303456,'Mana','Franco','otroprofe@utn.com.ar','123456',3);
 /*!40000 ALTER TABLE `usuarios` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -260,7 +264,7 @@ CREATE TABLE `usuariosxencuesta` (
   KEY `fk_userXEncuesta_usuario_idx` (`idUsuario`),
   CONSTRAINT `fk_userXEncuesta_encuesta` FOREIGN KEY (`idEncuesta`) REFERENCES `encuestas` (`idEncuestas`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_userXEncuesta_usuario` FOREIGN KEY (`idUsuario`) REFERENCES `usuarios` (`idUsuarios`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -269,6 +273,7 @@ CREATE TABLE `usuariosxencuesta` (
 
 LOCK TABLES `usuariosxencuesta` WRITE;
 /*!40000 ALTER TABLE `usuariosxencuesta` DISABLE KEYS */;
+INSERT INTO `usuariosxencuesta` VALUES (1,1,2),(2,2,2),(3,2,4),(4,4,2),(5,3,2);
 /*!40000 ALTER TABLE `usuariosxencuesta` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -284,6 +289,7 @@ CREATE TABLE `votosxcriterio` (
   `idCriterioXEncuesta` int(11) NOT NULL,
   `idUsuarioVotante` int(11) NOT NULL,
   `idEtapaActual` int(11) NOT NULL,
+  `priorizacion` int(11) DEFAULT NULL,
   PRIMARY KEY (`idVotosXCriterio`),
   KEY `fk_votos_criterio_idx` (`idCriterioXEncuesta`),
   KEY `fk_votos_usuario_idx` (`idUsuarioVotante`),
@@ -291,7 +297,7 @@ CREATE TABLE `votosxcriterio` (
   CONSTRAINT `fk_votos_criterio` FOREIGN KEY (`idCriterioXEncuesta`) REFERENCES `criteriosxencuesta` (`idCriteriosXEncuesta`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_votos_etapa` FOREIGN KEY (`idEtapaActual`) REFERENCES `etapas` (`idEtapas`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_votos_usuario` FOREIGN KEY (`idUsuarioVotante`) REFERENCES `usuarios` (`idUsuarios`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=127 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -300,6 +306,7 @@ CREATE TABLE `votosxcriterio` (
 
 LOCK TABLES `votosxcriterio` WRITE;
 /*!40000 ALTER TABLE `votosxcriterio` DISABLE KEYS */;
+INSERT INTO `votosxcriterio` VALUES (90,1,2,2,NULL),(91,11,2,2,NULL),(100,5,4,2,NULL),(101,14,4,2,NULL),(102,13,2,2,NULL),(103,5,2,2,NULL),(107,15,2,2,NULL),(108,18,2,2,NULL),(109,16,2,2,NULL),(123,5,2,3,2),(124,8,2,3,3),(125,5,4,3,3),(126,9,4,3,1);
 /*!40000 ALTER TABLE `votosxcriterio` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -312,4 +319,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-03-04 23:24:33
+-- Dump completed on 2018-07-22 19:50:14
