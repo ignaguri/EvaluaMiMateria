@@ -1,7 +1,7 @@
 <template>
   <div class="container-fluid">
     <!--<img src="../assets/background.jpg" width="100%" height="50%"/>-->
-    <h1 class="landing-title"><small>Bienvenido a</small><br><strong>Evaluá mi materia</strong></h1>
+    <h1 class="landing-title"><small>Bienvenido a</small><br><strong>EVALUÁ MI MATERIA</strong></h1>
     <button class="btn btn-info registrar" type="button" @click="registrarse">Registrarme</button>
     <button class="btn btn-success login" type="button" @click="login">Iniciar sesión</button>
   </div>
