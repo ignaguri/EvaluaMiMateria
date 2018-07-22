@@ -2,7 +2,7 @@
   <form>
     <div class="form-row align-items-center">
       <div class="col-1">
-        <span class="badge badge-info">Votos {{votos}}</span>
+        <span class="badge badge-info">{{votos}} votos</span>
       </div>
       <div class="col-10">
         <input type="text" class="form-control" disabled :value="criterio.criterio" title="Criterio"/>
@@ -39,8 +39,12 @@
   data () {
     return {
       votado: false,
-      votos: this.criterio.votos.length,
       textoBoton: 'Definitivo'
+    }
+  },
+  computed: {
+    votos () {
+      return this.criterio.priorizaciones
     }
   },
   watch: {

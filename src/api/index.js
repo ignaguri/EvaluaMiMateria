@@ -19,7 +19,7 @@ export default {
   },
   login (data) {
     return axios.get(URL + 'usuarios' + '?filter=legajo,eq,' + data.legajo + '&transform=1')
-      .then(function (response) {
+      .then(response => {
         if (response.data.usuarios.length <= 0) {
           console.error('Usuario no encontrado')
           return [false, 'Usuario no encontrado']
@@ -34,8 +34,8 @@ export default {
         sessionStorage.setItem('rol', user.idRol)
         return [true, user.idUsuarios, user.idRol]
       })
-      .catch(function (error) {
-        console.log(error)
+      .catch(error => {
+        console.error(error)
         return [false, error.response.status + ' ' + error.response.statusText]
       })
   },
@@ -516,11 +516,11 @@ export default {
           //   }
           // })
           let votos = {
-            '1 p': 0,
-            '2 p': 0,
-            '3 p': 0,
+            '5 p': 0,
             '4 p': 0,
-            '5 p': 0
+            '3 p': 0,
+            '2 p': 0,
+            '1 p': 0
           }
           c.votos.forEach(voto => {
             const rta = voto.respuesta + ' p'
@@ -635,15 +635,51 @@ export default {
             idEtapaActual: this.etapaAId(etapa)
           })
         })
-        return axios.post(URL + 'votosxcriterio', body)
-          .then(r => {
-            return true
+        if (body.length) {
+          return axios.post(URL + 'votosxcriterio', body)
+          // FIN NUEVO VOTO
+        } else {
+          return true
+        }
+      })
+      .then(r => {
+        return true
+      })
+      .catch(error => {
+        console.log(error)
+        return false
+      })
+  },
+  guardarPriorizacion (criterios, etapa, encuesta) {
+    if (!this.checkLogin()) return Promise.reject(new Error('Not logged in'))
+    const userId = Number(this.checkLogin())
+    // BORRAR LOS VOTOS ANTERIORES
+    return this.borrarVotos(encuesta, this.etapaAId(etapa), userId)
+      .then(borrados => {
+        // FIN BORRAR
+        // NUEVO VOTO
+        const body = []
+        criterios.forEach(c => {
+          body.push({
+            idCriterioXEncuesta: c.id,
+            priorizacion: c.priorizado,
+            idUsuarioVotante: userId,
+            idEtapaActual: this.etapaAId(etapa)
           })
-          .catch(error => {
-            console.log(error)
-            return false
-          })
-        // FIN NUEVO VOTO
+        })
+        if (body.length) {
+          return axios.post(URL + 'votosxcriterio', body)
+          // FIN NUEVO VOTO
+        } else {
+          return true
+        }
+      })
+      .then(r => {
+        return true
+      })
+      .catch(error => {
+        console.log(error)
+        return false
       })
   },
   getVotosCriterio (criterio, encuesta) {
@@ -657,7 +693,7 @@ export default {
           '&filter[]=idEtapaActual,eq,' + etapa +
           '&satisfy=all' + '&transform=1')
       })
-      .then(function (response) {
+      .then(response => {
         response.data.etapaActual = etapa
         response.data.criterio = criterio
         return response.data

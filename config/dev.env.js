@@ -4,6 +4,6 @@ const prodEnv = require('./prod.env')
 
 module.exports = merge(prodEnv, {
   NODE_ENV: '"development"',
-  API_URL: '"http://localhost/~iguri/AppEncuestadoraCreatividad/"' // para Mac
-  // API_URL: '"http://localhost/encuestaVueWebpack/"' // para Win
+  // API_URL: '"http://localhost/~iguri/AppEncuestadoraCreatividad/"' // para Mac
+  API_URL: '"http://localhost/AppEncuestadoraCreatividad/"' // para Win
 })

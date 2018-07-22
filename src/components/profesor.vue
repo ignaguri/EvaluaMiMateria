@@ -15,7 +15,7 @@
                     </div>
                 </div>
             </nav>
-        <div class="container-fluid">
+        <div class="container-fluid" style="padding-bottom: 30px;">
             <component :is="current" :id="id"></component>
         </div>
     </div>
