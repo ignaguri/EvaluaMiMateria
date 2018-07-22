@@ -43,16 +43,21 @@ import encuesta from './Encuesta.vue'
           this.filas = []
           api.getEncuestasPropietarias()
             .then(r => {
-              r.forEach(e => {
-                this.filas.push({
-                  id: e.idEncuestas,
-                  creador: e.creador,
-                  curso: e.curso,
-                  materia: e.materia,
-                  etapa: e.etapaActual,
-                  nombre: e.nombre
+              if (r.length > 0) {
+                r.sort((a, b) => a.idEncuestas - b.idEncuestas)
+                r.forEach(e => {
+                  this.filas.push({
+                    id: e.idEncuestas,
+                    creador: e.creador,
+                    curso: e.curso,
+                    materia: e.materia,
+                    etapa: e.etapaActual,
+                    nombre: e.nombre
+                  })
                 })
-              })
+              } else {
+                this.subtitulo = 'Todavía no has creado ninguna encuesta'
+              }
             })
         },
         verEncuesta (id) {

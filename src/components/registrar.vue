@@ -29,7 +29,7 @@
                     <input type="text" class="form-control" id="txt_legajo" placeholder="Legajo" v-model="legajo" required>
                 </div>
                 <div class="form-check form-check-inline" style="margin: 12px" v-for="rol in roles" :key="rol.id">
-                    <input class="form-check-input" type="radio" :name="rol.nombre" :value="rol.id" v-model="rolE" required>
+                    <input class="form-check-input" type="radio" :id="rol.nombre" :value="rol.id" v-model="rolE" required>
                     <label class="form-check-label" :for="rol.nombre">{{rol.nombre}}</label>
                 </div>
                 <div class="form-group">
