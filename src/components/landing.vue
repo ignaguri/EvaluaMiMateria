@@ -1,8 +1,8 @@
 <template>
-  <div class="">
-    <!--<img src="../assets/background.jpg"/>-->
-    <h1>{{ msg }}</h1>
-    <button class="btn btn-info registrar" type="button" @click="registrarse">Registrarse</button>
+  <div class="container-fluid">
+    <!--<img src="../assets/background.jpg" width="100%" height="50%"/>-->
+    <h1 class="landing-title"><small>Bienvenido a</small><br><strong>EVALUÁ MI MATERIA</strong></h1>
+    <button class="btn btn-info registrar" type="button" @click="registrarse">Registrarme</button>
     <button class="btn btn-success login" type="button" @click="login">Iniciar sesión</button>
   </div>
 </template>
@@ -12,7 +12,6 @@ export default {
   name: 'Landing',
   data () {
     return {
-      msg: 'Bienvenido a la App encuestadora'
     }
   },
   beforeRouteEnter (to, from, next) {
@@ -75,5 +74,9 @@ export default {
   /*border: none;*/
   /*cursor: pointer;*/
   /*border-radius: 5px;*/
+}
+.landing-title {
+  margin: 10px;
+  padding: 20px;
 }
 </style>

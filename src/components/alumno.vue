@@ -5,17 +5,19 @@
     </div>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
       <a class="navbar-brand" href="" @click.prevent="verPerfil">{{nombre}}</a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
+              aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
         <div class="navbar-nav">
-          <a class="nav-item nav-link" href="" @click.prevent="verEncuestas">Encuestas <span class="sr-only">(current)</span></a>
+          <a class="nav-item nav-link" href="" @click.prevent="verEncuestas">Encuestas <span
+                  class="sr-only">(current)</span></a>
           <a class="nav-item nav-link" href="" @click.prevent="matricularse">Matricularse</a>
         </div>
       </div>
     </nav>
-    <div class="container-fluid">
+    <div class="container-fluid" style="padding-bottom: 30px;">
       <component :is="current" :id="id"></component>
     </div>
   </div>

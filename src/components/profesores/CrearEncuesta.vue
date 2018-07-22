@@ -70,6 +70,7 @@ import api from '../../api'
             .then(r => {
               if (r) {
                 alert('Creada con éxito')
+                this.$parent.current = 'listaEncuestas'
               } else {
                 alert('Error al crear')
               }

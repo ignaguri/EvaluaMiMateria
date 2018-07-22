@@ -1,15 +1,15 @@
 <template>
-    <div>
+    <div class="container-fluid" style="padding-bottom: 30px;">
     <div class="row">
         <div class="col"></div>
         <div class="col-md-auto">
-            <h1>Registración</h1>
+            <h1>Registrarme</h1>
         </div>
         <div class="col"></div>
     </div>
     <div class="row">
         <div class="col"></div>
-        <div class="col-md-auto">
+        <div class="col-8">
             <form @submit.prevent="enviar">
                 <div class="form-group">
                     <label for="txt_mail">Dirección de correo electrónico</label>
@@ -28,8 +28,8 @@
                     <label for="txt_legajo">Legajo</label>
                     <input type="text" class="form-control" id="txt_legajo" placeholder="Legajo" v-model="legajo" required>
                 </div>
-                <div class="form-check form-check-inline" v-for="rol in roles" :key="rol.id">
-                    <input class="form-check-input" type="radio" name="chk_rol" :value="rol.id" v-model="rolE" required>
+                <div class="form-check form-check-inline" style="margin: 12px" v-for="rol in roles" :key="rol.id">
+                    <input class="form-check-input" type="radio" :id="rol.nombre" :value="rol.id" v-model="rolE" required>
                     <label class="form-check-label" :for="rol.nombre">{{rol.nombre}}</label>
                 </div>
                 <div class="form-group">

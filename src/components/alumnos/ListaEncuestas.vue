@@ -43,6 +43,7 @@ import encuesta from './Encuesta.vue'
           api.getEncuestasMatriculado()
             .then(r => {
               if (r.length > 0) {
+                r.sort((a, b) => a.idEncuestas - b.idEncuestas)
                 r.forEach(e => {
                   this.filas.push({
                     id: e.idEncuestas,
